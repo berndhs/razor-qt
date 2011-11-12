@@ -1,0 +1,6 @@
+<RCC>
+<qresource prefix="/qml">
+  <file alias="Listmenu.qml">qml/Listmenu.qml</file>
+  <file alias="Gridmenu.qml">qml/Gridmenu.qml</file>
+</qresource>
+</RCC>

@@ -16,6 +16,13 @@ public:
   int rowCount (const QModelIndex & parent = QModelIndex()) const;
   QVariant data (const QModelIndex & index, int role = Qt::DisplayRole) const;
 
+  void addSubmenu (const QString & title,
+                   const QString & desktop,
+                         int       menuTag);
+  void addAppLink (const QString & title,
+                   const QString & desktop,
+                         int       appTag);
+
 private:
 
   enum DataType {

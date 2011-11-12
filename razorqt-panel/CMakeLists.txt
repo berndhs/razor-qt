@@ -88,7 +88,7 @@ endif (MAINMENU_PLUGIN)
 if (GEUZEN_MENU_PLUGIN)
   set(ENABLED_PLUGINS ${ENABLED_PLUGINS}  "Geuzen Main menu")
   add_subdirectory ( geuzen-panel-menu )
-endif (MAINMENU_PLUGIN)
+endif (GEUZEN_MENU_PLUGIN)
 
 if (MOUNT_PLUGIN)
   if (NOT UDEV_STABLE)

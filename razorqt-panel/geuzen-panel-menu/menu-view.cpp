@@ -12,7 +12,21 @@ MenuView::MenuView (const XdgMenu & xdgMenu,
    nextAppTag (0)
 {
   topModel = new MenuModel (this);
-  subMenux[nextSubTag] = topModel;
+  subMenus[nextSubTag] = topModel;
+  nextSubTag++;
+  readModel (topModel, xdgMenu);
+}
+
+void
+MenuView::reload (const XdgMenu & xdgMenu)
+{
+  subMenus.clear ();
+  apps.clear ();
+  if (topModel) {
+    topModel->deleteLater ();
+  }
+  topModel = new MenuModel (this);
+  subMenus[nextSubTag] = topModel;
   nextSubTag++;
   readModel (topModel, xdgMenu);
 }
@@ -25,6 +39,32 @@ MenuView::readModel (MenuModel * parseModel, const XdgMenu & xdgMenu)
   parseDom (parseModel, root);
 } 
 
+void
+MenuView::exec (const QPoint & pos)
+{
+  move (pos);
+  show ();
+}
+
+void
+MenuView::init (ViewType viewType)
+{
+  QString qmlName;
+  switch (viewType) {
+  case GridView:
+    qmlName = "Gridmenu.qml";
+    break;
+  case ListView:
+    qmlName = "Listmenu.qml";
+    break;
+  default:
+    break;
+  }
+  if (!qmlName.isEmpty()) {
+    setSource (QUrl (QString("qrc:/qml/%1").arg (qmlName)));
+  }
+  hide ();
+}
 
 void
 MenuView::parseDom (MenuModel * parseModel, const QDomElement & root)
@@ -33,10 +73,10 @@ MenuView::parseDom (MenuModel * parseModel, const QDomElement & root)
   for (elt = root.firstChildElement ();
        !elt.isNull();
        elt = elt.nextSiblingElement ()) {
-    if (elt.tagName() == "Menu")) {
-      startSubmenu (elt);
-    } else if (elt.tagName() == "AppLink")) {
-      insertAppLink (elt);
+    if (elt.tagName() == "Menu") {
+      startSubMenu (parseModel, elt);
+    } else if (elt.tagName() == "AppLink") {
+      insertAppLink (parseModel, elt);
     } 
   }
 }
@@ -45,29 +85,29 @@ void
 MenuView::startSubMenu (MenuModel * parseModel, const QDomElement & root)
 {
   QString title;
-  if (root.arrtibute("title").isEmpty()) {
+  if (root.attribute("title").isEmpty()) {
     title = root.attribute ("name");
   } else {
     title = root.attribute ("title");
   }
   QString desktopFile = root.attribute ("desktopFile");
+  MenuModel * subModel = new MenuModel (this);
+  subMenus[nextSubTag] = subModel;
   parseModel->addSubmenu (title, desktopFile, nextSubTag);
-  parseModel = new MenuModel (this);
-  subMenus[nextSubTag] = parseModel;
   nextSubTag++;
-  parseDom (parseModel, root);
+  parseDom (subModel, root);
 }
 
 void
-MenuView::insertAppLink (const QDomElement & elt)
+MenuView::insertAppLink (MenuModel * parseModel, const QDomElement & elt)
 {
   QString title;
-  if (root.arrtibute("title").isEmpty()) {
-    title = root.attribute ("name");
+  if (elt.attribute("title").isEmpty()) {
+    title = elt.attribute ("name");
   } else {
-    title = root.attribute ("title");
+    title = elt.attribute ("title");
   }
-  QString desktopFile = root.attribute ("desktopFile");
+  QString desktopFile = elt.attribute ("desktopFile");
   apps[nextAppTag] = desktopFile;
   parseModel->addAppLink (title, desktopFile, nextAppTag);
   nextAppTag++;
