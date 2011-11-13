@@ -63,6 +63,16 @@ MenuView::init (ViewType viewType)
   if (!qmlName.isEmpty()) {
     setSource (QUrl (QString("qrc:/qml/%1").arg (qmlName)));
   }
+  qmlRoot = qobject_cast <QDeclarativeItem*> (rootObject());
+  if (qmlRoot) {
+    connect (qmlRoot, SIGNAL (cancelled()), this, SLOT (cancel()));
+  }
+  hide ();
+}
+
+void
+MenuView::cancel ()
+{
   hide ();
 }
 

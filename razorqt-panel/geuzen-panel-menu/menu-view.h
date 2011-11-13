@@ -4,6 +4,7 @@
 #include <QtDeclarative/QDeclarativeView>
 #include <QtXml/QDomElement>
 #include <QtXml/QDomDocument>
+#include <QtDeclarative/QDeclarativeItem>
 
 #include <qtxdg/xdgmenu.h>
 
@@ -32,6 +33,7 @@ public slots:
   void init (ViewType viewType);
 
   void exec (const QPoint & pos);
+  void cancel ();
 
 private slots:
 
@@ -50,13 +52,13 @@ private:
   void insertAppLink (MenuModel * parseMode, const QDomElement & elt);
 
 
-  MenuModel    *topModel;
-  MenuModel    *currentModel;
-  int           nextSubTag;
-  int           nextAppTag;
-  ModelMap      subMenus;
-  AppMap        apps;
-  
+  MenuModel         *topModel;
+  MenuModel         *currentModel;
+  int                nextSubTag;
+  int                nextAppTag;
+  ModelMap           subMenus;
+  AppMap             apps;
+  QDeclarativeItem * qmlRoot;
 };
 
 } // namespace

@@ -4,6 +4,7 @@ Rectangle {
   id: mainBox
   width: 300; height: 300
   color: "lightblue"
+  signal cancelled ()
   Text {
     anchors.centerIn: parent
     text: "No List Menu Implementation"
@@ -11,7 +12,7 @@ Rectangle {
   MouseArea {
     anchors.fill: parent
     onClicked: {
-      Qt.quit ()
+      mainBox.cancelled ()
     }
   }
 }
