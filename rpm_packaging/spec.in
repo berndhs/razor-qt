@@ -1,0 +1,269 @@
+# norootforbuild
+
+%if 0%{?fedora} || 0%{?centos_version}
+	%define breq qt4-devel >= 4.6.0, libXcomposite-devel
+	%define qmake /usr/bin/qmake-qt4
+	%define lrelease /usr/bin/lrelease-qt4
+	%define uic /usr/bin/uic-qt4
+	%define qtxdglib libqtxdg
+	%define qtxdglibdevel libqtxdg-devel
+%endif
+%if 0%{?mdkversion}
+	%define breq libqt4-devel >= 4.6.0, qt4-linguist, libxcomposite-devel
+	%define qmake /usr/lib/qt4/bin/qmake
+	%define lrelease /usr/lib/qt4/bin/lrelease
+	%define uic /usr/lib/qt4/bin/uic
+	%define qtxdglib libqtxdg
+	%define qtxdglibdevel libqtxdg-devel
+%endif
+%if 0%{?suse_version}
+	%define breq libqt4-devel >= 4.6.0, update-desktop-files
+	%define qmake /usr/bin/qmake
+	%define lrelease /usr/bin/lrelease
+	%define uic /usr/bin/uic
+	%define qtxdglib libqtxdg0
+	%define qtxdglibdevel libqtxdg-devel
+%endif
+
+
+Name:           razorqt
+Version:	%{sourceversion}
+Release:	%{relcount}%{dist}
+License:	GPL
+Source:		%{name}-%{version}.tar.bz2
+Group:		System/GUI/Other
+Summary:	Razor a lightweight desktop toolbox
+Vendor:		Razor-qt team
+Url:		http://razor-qt.org
+BuildRequires:	gcc-c++, cmake, make, file-devel, %{breq}
+BuildRoot:	%{_tmppath}/%{name}-%{version}-build
+Requires:	%{name}-desktop = %{version}, %{name}-panel = %{version}, %{name}-session = %{version}
+Requires:	%{name}-appswitcher = %{version}, %{name}-runner = %{version}
+Requires:	%{name}-config = %{version}, %{name}-data = %{version}
+Prefix:		/usr
+BuildRequires:	libudev-devel >= 128
+
+#Recommends:	qterminal, juffed, ptbatterysystemtray, qlipper, qxkb, qasmixer, screengrab
+
+
+%package	devel
+Summary:	RazorQt development package
+Url:            http://razor-qt.org
+Group:		Development/Libraries/C and C++
+Requires:	%{name}-libraries
+Obsoletes:	razorqt-x11info <= %{version}
+
+%package	libraries
+Summary:	RazorQt shared library
+Url:            http://razor-qt.org
+Group:		System/Libraries
+Requires:	upower
+#Requires:	oxygen-icon-theme
+# names before 0.4
+Obsoletes:	razorqt-libs <= %{version}, librazorqt0 <= %{version}
+
+%package	-n %{qtxdglib}
+Url:            http://razor-qt.org
+Summary:	QtXdg library
+Group:		System/Libraries
+
+%package	-n %{qtxdglibdevel}
+Url:            http://razor-qt.org
+Summary:	Development files for QtXdg library
+Group:		Development/Libraries/C and C++
+Requires:	%{qtxdglib} = %{version}
+
+%package	appswitcher
+Url:            http://razor-qt.org
+Summary:	RazorQt application switcher
+Group:		System/X11/Utilities
+Requires:	%{name}-data
+
+%package	desktop
+Url:            http://razor-qt.org
+Summary:	RazorQt desktop
+Group:		System/GUI/Other
+Requires:	%{name}-data
+
+%package	panel
+Url:            http://razor-qt.org
+Summary:	RazorQt panel
+Group:		System/GUI/Other
+Requires:	%{name}-data xscreensaver
+
+%package	data
+Url:            http://razor-qt.org
+Summary:        RazorQt resources and shared data
+Group:          System/GUI/Other
+Obsoletes:	%{name}-resources <= %{version}
+
+%package	runner
+Url:            http://razor-qt.org
+Summary:        RazorQt runner application
+Group:          System/GUI/Other
+Requires:	%{name}-data
+
+%package	session
+Url:            http://razor-qt.org
+Summary:	RazorQt session
+Group:		System/GUI/Other
+Requires:	%{name}-data, openbox
+Obsoletes:	%{name}-openbox <= %{version}, %{name}-wm <= %{version}
+
+%package	config
+Url:            http://razor-qt.org
+Summary:	RazorQt config tools
+Group:		System/GUI/Other
+
+%description
+Description:	%{summary}
+
+%description	libraries
+Description:	%{summary}
+
+%description	-n %{qtxdglib}
+Description:	Implementation of XDG standards in Qt.
+
+%description    -n %{qtxdglibdevel}
+Description:	%{summary}
+
+%description	devel
+Description:	%{summary}
+
+%description	appswitcher
+Description:	%{summary}
+
+%description	desktop
+Description:	%{summary}
+
+%description	panel
+Description:	%{summary}
+
+%description	data
+Description:	%{summary}
+
+%description	runner
+Description:	%{summary}
+
+%description	config
+Description:	%{summary}
+
+%description	session
+Description:	%{summary}
+
+%prep
+%setup -q -n %{name}-%{version}
+
+%build
+_libsuffix=$(echo %{_lib} | cut -b4-)
+cmake . -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=release -DLIB_SUFFIX=$_libsuffix
+make
+
+%install
+%{__rm} -rf %{buildroot}
+%{makeinstall} DESTDIR=%{buildroot}
+
+
+%clean
+%{__rm} -rf %{buildroot}
+
+%post	libraries
+ldconfig
+
+%post   -n %{qtxdglib}
+ldconfig
+
+%postun	libraries
+ldconfig
+
+%postun -n %{qtxdglib}
+ldconfig
+
+%files
+%defattr(-,root,root,-)
+%doc README
+
+%files	libraries
+%defattr(-,root,root,-)
+%{_libdir}/librazor*.so.*
+%{_datadir}/librazorqt
+
+%files  -n %{qtxdglib}
+%defattr(-,root,root,-)
+%{_libdir}/libqtxdg.so.*
+%{_datadir}/qtxdg
+
+%files  -n %{qtxdglibdevel}
+%defattr(-,root,root,-)
+%{_libdir}/libqtxdg.so
+%{_includedir}/qtxdg/
+
+%files	devel
+%defattr(-,root,root,-)
+%{_libdir}/librazor*.so
+%{_includedir}/razor*/
+%{_bindir}/razor-x11info
+
+%files	appswitcher
+%defattr(-,root,root,-)
+%{_bindir}/razor-appswitcher
+
+%files	desktop
+%defattr(-,root,root,-)
+%{_bindir}/razor-desktop
+%{_bindir}/razor-config-desktop
+%{_libdir}/razor-desktop
+%{_datadir}/applications/razor-config-desktop.desktop
+%dir %{_datadir}/razor
+%{_datadir}/razor/desktop.conf
+%{_datadir}/razor/razor-desktop/
+
+%files	panel
+%defattr(-,root,root,-)
+%{_bindir}/razor-panel
+%{_libdir}/razor-panel/
+%{_datadir}/razor/razor-panel/
+
+%files	runner
+%defattr(-,root,root,-)
+%{_bindir}/razor-runner
+%{_datadir}/razor/razor-runner/
+
+%files  config
+%defattr(-,root,root,-)
+%{_bindir}/razor-config
+%{_bindir}/razor-config-mouse
+%{_bindir}/razor-config-appearance
+%{_datadir}/applications/razor-config.desktop
+%{_datadir}/applications/razor-config-mouse.desktop
+%{_datadir}/applications/razor-config-appearance.desktop
+%{_datadir}/razor/razor-config/
+
+%files	session
+%defattr(-,root,root,-)
+%{_bindir}/razor-session
+%{_bindir}/razor-config-session
+%{_bindir}/startrazor
+%{_datadir}/xsessions/razor*.desktop
+%dir %{_datadir}/apps/
+%dir %{_datadir}/apps/kdm
+%dir %{_datadir}/apps/kdm/sessions
+%{_datadir}/apps/kdm/sessions/razor*.desktop
+%{_datadir}/applications/razor-config-session.desktop
+%{_datadir}/razor/session*.conf
+%{_datadir}/razor/razor-session/
+
+%files	data
+%defattr(-,root,root,-)
+%{_datadir}/razor/razor.conf
+%{_datadir}/razor/graphics/
+%{_datadir}/razor/themes/
+%config /etc/xdg/menus/razor-applications.menu
+%dir /etc/xdg/menus
+%{_datadir}/desktop-directories/razor*
+%dir %{_datadir}/desktop-directories
+# temp files - it will be removed when it becomes part of upstream
+%{_libdir}/razor-xdg-tools
+
+
+%changelog
