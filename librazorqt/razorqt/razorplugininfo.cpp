@@ -33,6 +33,7 @@
 #include <QtCore/QCoreApplication>
 #include <QLibrary>
 #include <QDebug>
+#include <iostream>
 
 
 /************************************************
@@ -136,12 +137,16 @@ void RazorPluginInfoList::load(const QString& desktopFilesDir, const QString& se
     QFileInfoList files = dir.entryInfoList(QStringList(nameFilter), QDir::Files | QDir::Readable);
     foreach (QFileInfo file, files)
     {
+        std::cout << __PRETTY_FUNCTION__ << "loading " << file.fileName().toStdString();
         RazorPluginInfo* item = new RazorPluginInfo(file.canonicalFilePath());
 
-        if (item->isValid() && item->serviceType() == serviceType)
+        if (item->isValid() && item->serviceType() == serviceType) {
             append(item);
-        else
+            std::cout << " load ok " << std::endl;
+        } else {
+            std::cout << " load failed " << std::endl;
             delete item;
+        }
     }
 
 }

@@ -18,3 +18,4 @@ razorqt-session/razor-session
 *~
 CMakeLists.txt.user*
 /build
+doxy/

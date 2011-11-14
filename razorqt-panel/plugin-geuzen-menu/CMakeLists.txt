@@ -1,11 +1,12 @@
 cmake_minimum_required(VERSION 2.6)
 
-set(PLUGIN "mainmenu")
+set(PLUGIN "geuzenmenu")
 
 
 set(HEADERS
     menu-view.h
     menu-model.h
+    menustyle.h
     geuzen-main-menu.h
     geuzen-menu-config.h
 )
@@ -13,6 +14,7 @@ set(HEADERS
 set(SOURCES
     menu-view.cpp
     menu-model.cpp
+    menustyle.cpp
     geuzen-main-menu.cpp
     geuzen-menu-config.cpp
 )
@@ -20,6 +22,7 @@ set(SOURCES
 set(MOCS
     menu-view.h
     menu-model.h
+    menustyle.h
     geuzen-main-menu.h
     geuzen-menu-config.h
 )
@@ -38,7 +41,7 @@ set(LIBRARIES
 
 set(QT_USE_QTXML 1)
 set(QT_USE_QTDBUS 1)
-set(QT_USE_DECLARATIVE 1)
+set(QT_USE_QTDECLARATIVE 1)
 
 #*******************************************
 include ("../BuildPlugin.cmake")

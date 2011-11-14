@@ -3,9 +3,11 @@
  * Razor - a lightweight, Qt based, desktop toolset
  * http://razor-qt.org
  *
+ * Copyright: 2011 Bernd Stramm
  * Copyright: 2010-2011 Razor team
  * Authors:
  *   Alexander Sokoloff <sokoloff.a@gmail.ru>
+ *   Bernd Stramm <bernd.stramm@@gmail.com>
  *
  * This program or library is free software; you can redistribute it
  * and/or modify it under the terms of the GNU Lesser General Public

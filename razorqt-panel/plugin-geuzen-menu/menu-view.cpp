@@ -1,4 +1,6 @@
 #include "menu-view.h"
+#include <QDebug>
+#include <QMessageBox>
 
 namespace geuzen
 {
@@ -15,11 +17,13 @@ MenuView::MenuView (const XdgMenu & xdgMenu,
   subMenus[nextSubTag] = topModel;
   nextSubTag++;
   readModel (topModel, xdgMenu);
+  setWindowFlags (Qt::Window | Qt::FramelessWindowHint);
 }
 
 void
 MenuView::reload (const XdgMenu & xdgMenu)
 {
+  qDebug () << __PRETTY_FUNCTION__;
   subMenus.clear ();
   apps.clear ();
   if (topModel) {
@@ -49,6 +53,7 @@ MenuView::exec (const QPoint & pos)
 void
 MenuView::init (ViewType viewType)
 {
+  qDebug () << __PRETTY_FUNCTION__;
   QString qmlName;
   switch (viewType) {
   case GridView:
@@ -60,8 +65,9 @@ MenuView::init (ViewType viewType)
   default:
     break;
   }
+  show ();
   if (!qmlName.isEmpty()) {
-    setSource (QUrl (QString("qrc:/qml/%1").arg (qmlName)));
+    setSource (QUrl (QString("qrc:///qml/%1").arg (qmlName)));
   }
   qmlRoot = qobject_cast <QDeclarativeItem*> (rootObject());
   if (qmlRoot) {

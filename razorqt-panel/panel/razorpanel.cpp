@@ -256,7 +256,7 @@ void RazorPanelPrivate::loadPlugins()
         RazorPluginInfo* pi = mAvailablePlugins.find(type);
         if (!pi)
         {
-            qWarning() << QString("Plugin \"%1\" not found.").arg(type);
+            qWarning() << QString("Plugin \"%1\" not found - 1.").arg(type);
             continue;
         }
 

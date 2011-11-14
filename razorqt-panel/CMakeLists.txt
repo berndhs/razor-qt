@@ -23,12 +23,12 @@ setByDefault(CLOCK_PLUGIN       Yes )
 setByDefault(DESKTOPSWITCH_PLUGIN  Yes )
 setByDefault(QUICKLAUNCH_PLUGIN Yes )
 setByDefault(TRAY_PLUGIN        Yes )
-setByDefault(MAINMENU_PLUGIN    No )
 setByDefault(TASKBAR_PLUGIN     Yes )
 setByDefault(SCREENSAVER_PLUGIN  Yes )
 setByDefault(SHOWDESKTOP_PLUGIN Yes)
 setByDefault(MOUNT_PLUGIN Yes)
-setByDefault(GEUZEN_MENU_PLUGIN Yes)
+setByDefault(GEUZEN_MENU_PLUGIN Yes )
+setByDefault(MAINMENU_PLUGIN    Yes )
 
 # *******************************************************************
 
@@ -86,8 +86,8 @@ endif (MAINMENU_PLUGIN)
 
 
 if (GEUZEN_MENU_PLUGIN)
-  set(ENABLED_PLUGINS ${ENABLED_PLUGINS}  "Geuzen Main menu")
-  add_subdirectory ( geuzen-panel-menu )
+  set(ENABLED_PLUGINS ${ENABLED_PLUGINS}  "Geuzen menu")
+  add_subdirectory ( plugin-geuzen-menu )
 endif (GEUZEN_MENU_PLUGIN)
 
 if (MOUNT_PLUGIN)

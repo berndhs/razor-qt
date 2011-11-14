@@ -43,6 +43,7 @@ set(LIBRARIES
 
 set(QT_USE_QTXML true)
 set(QT_USE_QTSCRIPT true)
+set(QT_USE_QTDECLARATIVE true)
 
 set(THEMES
     resources/themes

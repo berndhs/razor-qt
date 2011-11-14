@@ -4,6 +4,7 @@ set(PROJECT razor-panel )
 
 set(QT_USE_QTXML 1)
 set(QT_USE_QTDBUS 1)
+set(QT_USE_QTDECLARATIVE 1)
 
 set(HEADERS
     razorpanel.h

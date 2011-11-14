@@ -3,6 +3,7 @@
 
 #include <QAbstractListModel>
 #include <QVariant>
+#include <QList>
 
 namespace geuzen
 {
@@ -32,6 +33,23 @@ private:
     Type_MenuTag   = Qt::UserRole +4,
     Type_LeafTag   = Qt::UserRole +5
   };
+  enum EntryKind {
+    Entry_None = 0,
+    Entry_Menu = 1,
+    Entry_Application = 2
+  };
+
+  struct Entry {
+    Entry (QString ti, QString d, EntryKind ty, int tg)
+      :title (ti), desktop (d), tipo (ty), tag (tg)
+    {}
+    QString    title;
+    QString    desktop;
+    EntryKind  tipo;
+    int        tag;
+  };
+
+  QList <Entry>  items;
 }; 
 
 } // namespace
