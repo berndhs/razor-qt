@@ -33,9 +33,9 @@
 
  ************************************************/
 MenuStyle::MenuStyle():
-    QProxyStyle()
+  QProxyStyle()
 {
-    mIconSize = 16;
+  mIconSize = 16;
 }
 
 
@@ -44,8 +44,8 @@ MenuStyle::MenuStyle():
  ************************************************/
 int MenuStyle::pixelMetric(PixelMetric metric, const QStyleOption * option, const QWidget * widget) const
 {
-    if (metric == QProxyStyle::PM_SmallIconSize)
-        return mIconSize;
+  if (metric == QProxyStyle::PM_SmallIconSize)
+    return mIconSize;
 
-    return QProxyStyle::pixelMetric(metric, option, widget);
+  return QProxyStyle::pixelMetric(metric, option, widget);
 }

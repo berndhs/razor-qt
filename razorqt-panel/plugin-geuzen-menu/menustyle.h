@@ -32,15 +32,19 @@
 
 class MenuStyle : public QProxyStyle
 {
-    Q_OBJECT
+  Q_OBJECT
 public:
-    explicit MenuStyle();
-    int pixelMetric(PixelMetric metric, const QStyleOption * option = 0, const QWidget * widget = 0 ) const;
-    int iconSize() const { return mIconSize; }
-    void setIconSize(int value) { mIconSize = value; }
+  explicit MenuStyle();
+  int pixelMetric(PixelMetric metric, const QStyleOption * option = 0, const QWidget * widget = 0 ) const;
+  int iconSize() const {
+    return mIconSize;
+  }
+  void setIconSize(int value) {
+    mIconSize = value;
+  }
 
 private:
-    int mIconSize;
+  int mIconSize;
 };
 
 #endif // MENUSTYLE_H

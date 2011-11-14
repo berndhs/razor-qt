@@ -10,7 +10,7 @@ namespace geuzen
 
 class MenuModel : public QAbstractListModel
 {
-Q_OBJECT
+  Q_OBJECT
 public:
   MenuModel (QObject * parent=0);
 
@@ -19,10 +19,10 @@ public:
 
   void addSubmenu (const QString & title,
                    const QString & desktop,
-                         int       menuTag);
+                   int       menuTag);
   void addAppLink (const QString & title,
                    const QString & desktop,
-                         int       appTag);
+                   int       appTag);
 
 private:
 
@@ -50,7 +50,7 @@ private:
   };
 
   QList <Entry>  items;
-}; 
+};
 
 } // namespace
 

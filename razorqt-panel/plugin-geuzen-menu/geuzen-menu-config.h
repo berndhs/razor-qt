@@ -35,32 +35,33 @@
 class QSettings;
 class QAbstractButton;
 
-namespace Ui {
-    class GeuzenMenuConfig;
+namespace Ui
+{
+class GeuzenMenuConfig;
 }
 
 class GeuzenMenuConfig : public QDialog
 {
-    Q_OBJECT
+  Q_OBJECT
 
 public:
-    explicit GeuzenMenuConfig(QSettings &settings, QWidget *parent = 0);
-    ~GeuzenMenuConfig();
+  explicit GeuzenMenuConfig(QSettings &settings, QWidget *parent = 0);
+  ~GeuzenMenuConfig();
 
 private:
-    Ui::GeuzenMenuConfig *ui;
-    QSettings &mSettings;
-    RazorSettingsCache mOldSettings;
+  Ui::GeuzenMenuConfig *ui;
+  QSettings &mSettings;
+  RazorSettingsCache mOldSettings;
 
 private slots:
-    /*
-      Saves settings in conf file.
-    */
-    void loadSettings();
-    void dialogButtonsAction(QAbstractButton *btn);
-    void textButtonChanged(QString value);
-    void showTextChanged(bool value);
-    void chooseMenuFile();
+  /*
+    Saves settings in conf file.
+  */
+  void loadSettings();
+  void dialogButtonsAction(QAbstractButton *btn);
+  void textButtonChanged(QString value);
+  void showTextChanged(bool value);
+  void chooseMenuFile();
 };
 
 #endif // GeuzenMenuConfig_H

@@ -45,36 +45,38 @@ class RazorBar;
 class PowerManager;
 class ScreenSaver;
 
-namespace geuzen 
+namespace geuzen
 {
 
 class GeuzenMainMenu : public RazorPanelPlugin
 {
-    Q_OBJECT
+  Q_OBJECT
 public:
-    GeuzenMainMenu(const RazorPanelPluginStartInfo* startInfo, QWidget* parent = 0);
-    ~GeuzenMainMenu();
+  GeuzenMainMenu(const RazorPanelPluginStartInfo* startInfo, QWidget* parent = 0);
+  ~GeuzenMainMenu();
 
-    virtual RazorPanelPlugin::Flags flags() const { return HaveConfigDialog ; }
+  virtual RazorPanelPlugin::Flags flags() const {
+    return HaveConfigDialog ;
+  }
 
 private:
-    QPushButton mButton;
-    QString mLogDir;
-    QString mMenuFile;
-    MenuStyle mTopMenuStyle;
-    MenuStyle mMenuStyle;
-    PowerManager* mPowerManager;
-    ScreenSaver* mScreenSaver;
-    MenuView  * mMenu;
-    XdgMenu mXdgMenu;
-    void buildMenu();
+  QPushButton mButton;
+  QString mLogDir;
+  QString mMenuFile;
+  MenuStyle mTopMenuStyle;
+  MenuStyle mMenuStyle;
+  PowerManager* mPowerManager;
+  ScreenSaver* mScreenSaver;
+  MenuView  * mMenu;
+  XdgMenu mXdgMenu;
+  void buildMenu();
 
 protected slots:
-    virtual void showConfigureDialog();
-    virtual void settigsChanged();
+  virtual void showConfigureDialog();
+  virtual void settigsChanged();
 
 private slots:
-    void showMenu();
+  void showMenu();
 };
 
 } // namespace

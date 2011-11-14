@@ -3,6 +3,7 @@
 #include <QHash>
 #include <QByteArray>
 #include <QDebug>
+#include <iostream>
 
 namespace geuzen
 {
@@ -16,6 +17,7 @@ MenuModel::MenuModel (QObject *parent)
   daroles[Type_IsSubmenu] = "isMenu";
   daroles[Type_MenuTag] = "menuTag";
   daroles[Type_LeafTag] = "appTag";
+  setRoleNames (daroles);
 }
 
 int
@@ -25,7 +27,7 @@ MenuModel::rowCount (const QModelIndex & parent) const
   return items.count ();
 }
 
-QVariant 
+QVariant
 MenuModel::data (const QModelIndex & index, int role) const
 {
   int row (index.row());
@@ -55,18 +57,28 @@ MenuModel::data (const QModelIndex & index, int role) const
 
 void
 MenuModel::addSubmenu (const QString & title,
-                   const QString & desktop,
-                         int       menuTag)
+                       const QString & desktop,
+                       int       menuTag)
 {
   items.append (Entry (title, desktop, Entry_Menu, menuTag));
+  std::cout << __PRETTY_FUNCTION__
+            << " item " << items.count()
+            << " " << title.toStdString()
+            << " " << desktop.toStdString ()
+            << std::endl;
 }
 
 void
 MenuModel::addAppLink (const QString & title,
-                   const QString & desktop,
-                         int       appTag)
+                       const QString & desktop,
+                       int       appTag)
 {
   items.append (Entry (title, desktop, Entry_Application, appTag));
+  std::cout << __PRETTY_FUNCTION__
+            << " item " << items.count()
+            << " " << title.toStdString()
+            << " " << desktop.toStdString ()
+            << std::endl;
 }
 
 } // namespace

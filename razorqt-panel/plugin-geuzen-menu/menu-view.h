@@ -5,6 +5,7 @@
 #include <QtXml/QDomElement>
 #include <QtXml/QDomDocument>
 #include <QtDeclarative/QDeclarativeItem>
+#include <QtDeclarative/QDeclarativeContext>
 
 #include <qtxdg/xdgmenu.h>
 
@@ -14,7 +15,7 @@ namespace geuzen
 {
 class MenuView : public QDeclarativeView
 {
-Q_OBJECT
+  Q_OBJECT
 public:
 
   enum ViewType {
@@ -24,7 +25,7 @@ public:
 
   MenuView (const XdgMenu& xdgMenu,
             const QString & title = QString(),
-                  QWidget *parent=0);
+            QWidget *parent=0);
 
   void reload (const XdgMenu & xdgMenu);
 
@@ -52,13 +53,14 @@ private:
   void insertAppLink (MenuModel * parseMode, const QDomElement & elt);
 
 
-  MenuModel         *topModel;
-  MenuModel         *currentModel;
-  int                nextSubTag;
-  int                nextAppTag;
-  ModelMap           subMenus;
-  AppMap             apps;
-  QDeclarativeItem * qmlRoot;
+  MenuModel            *topModel;
+  MenuModel            *currentModel;
+  int                   nextSubTag;
+  int                   nextAppTag;
+  ModelMap              subMenus;
+  AppMap                apps;
+  QDeclarativeItem    * qmlRoot;
+  QDeclarativeContext * context;
 };
 
 } // namespace

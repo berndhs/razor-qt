@@ -1,12 +1,13 @@
 #include "menu-view.h"
 #include <QDebug>
 #include <QMessageBox>
+#include <iostream>
 
 namespace geuzen
 {
 MenuView::MenuView (const XdgMenu & xdgMenu,
                     const QString & title,
-                          QWidget *parent)
+                    QWidget *parent)
   :QDeclarativeView (parent),
    topModel (0),
    currentModel (0),
@@ -41,7 +42,7 @@ MenuView::readModel (MenuModel * parseModel, const XdgMenu & xdgMenu)
   const QDomDocument doc (xdgMenu.xml());
   QDomElement root = doc.firstChildElement ("");
   parseDom (parseModel, root);
-} 
+}
 
 void
 MenuView::exec (const QPoint & pos)
@@ -66,6 +67,8 @@ MenuView::init (ViewType viewType)
     break;
   }
   show ();
+  context = rootContext();
+  context->setContextProperty ("cppMenuModel",topModel);
   if (!qmlName.isEmpty()) {
     setSource (QUrl (QString("qrc:///qml/%1").arg (qmlName)));
   }
@@ -85,15 +88,17 @@ MenuView::cancel ()
 void
 MenuView::parseDom (MenuModel * parseModel, const QDomElement & root)
 {
+  std::cout << __PRETTY_FUNCTION__ << parseModel << std::endl;
   QDomElement  elt;
   for (elt = root.firstChildElement ();
        !elt.isNull();
        elt = elt.nextSiblingElement ()) {
+    std::cout << " tag " << elt.tagName().toStdString() << std::endl;
     if (elt.tagName() == "Menu") {
       startSubMenu (parseModel, elt);
     } else if (elt.tagName() == "AppLink") {
       insertAppLink (parseModel, elt);
-    } 
+    }
   }
 }
 
@@ -106,6 +111,7 @@ MenuView::startSubMenu (MenuModel * parseModel, const QDomElement & root)
   } else {
     title = root.attribute ("title");
   }
+  std::cout << "  submenu title " << title.toStdString() << std::endl;
   QString desktopFile = root.attribute ("desktopFile");
   MenuModel * subModel = new MenuModel (this);
   subMenus[nextSubTag] = subModel;
@@ -123,6 +129,7 @@ MenuView::insertAppLink (MenuModel * parseModel, const QDomElement & elt)
   } else {
     title = elt.attribute ("title");
   }
+  std::cout << "  application title " << title.toStdString() << std::endl;
   QString desktopFile = elt.attribute ("desktopFile");
   apps[nextAppTag] = desktopFile;
   parseModel->addAppLink (title, desktopFile, nextAppTag);

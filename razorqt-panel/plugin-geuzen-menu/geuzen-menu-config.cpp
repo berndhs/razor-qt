@@ -32,73 +32,68 @@
 #include <QtGui/QFileDialog>
 
 GeuzenMenuConfig::GeuzenMenuConfig(QSettings &settings, QWidget *parent) :
-    QDialog(parent),
-    ui(new Ui::GeuzenMenuConfig),
-    mSettings(settings),
-    mOldSettings(settings)
+  QDialog(parent),
+  ui(new Ui::GeuzenMenuConfig),
+  mSettings(settings),
+  mOldSettings(settings)
 {
-    setAttribute(Qt::WA_DeleteOnClose);
-    setObjectName("MainMenuConfigurationWindow");
-    ui->setupUi(this);
+  setAttribute(Qt::WA_DeleteOnClose);
+  setObjectName("MainMenuConfigurationWindow");
+  ui->setupUi(this);
 
-    connect(ui->buttons, SIGNAL(clicked(QAbstractButton*)), this, SLOT(dialogButtonsAction(QAbstractButton*)));
-    connect(ui->showTextCB, SIGNAL(toggled(bool)), ui->textL, SLOT(setEnabled(bool)));
-    connect(ui->showTextCB, SIGNAL(toggled(bool)), ui->textLE, SLOT(setEnabled(bool)));
+  connect(ui->buttons, SIGNAL(clicked(QAbstractButton*)), this, SLOT(dialogButtonsAction(QAbstractButton*)));
+  connect(ui->showTextCB, SIGNAL(toggled(bool)), ui->textL, SLOT(setEnabled(bool)));
+  connect(ui->showTextCB, SIGNAL(toggled(bool)), ui->textLE, SLOT(setEnabled(bool)));
 
-    loadSettings();
+  loadSettings();
 
-    connect(ui->showTextCB, SIGNAL(toggled(bool)), this, SLOT(showTextChanged(bool)));
-    connect(ui->textLE, SIGNAL(textEdited(QString)), this, SLOT(textButtonChanged(QString)));
-    connect(ui->chooseMenuFilePB, SIGNAL(clicked()), this, SLOT(chooseMenuFile()));
+  connect(ui->showTextCB, SIGNAL(toggled(bool)), this, SLOT(showTextChanged(bool)));
+  connect(ui->textLE, SIGNAL(textEdited(QString)), this, SLOT(textButtonChanged(QString)));
+  connect(ui->chooseMenuFilePB, SIGNAL(clicked()), this, SLOT(chooseMenuFile()));
 }
 
 GeuzenMenuConfig::~GeuzenMenuConfig()
 {
-    delete ui;
+  delete ui;
 }
 
 void GeuzenMenuConfig::loadSettings()
 {
-    ui->showTextCB->setChecked(mSettings.value("showText", false).toBool());
-    ui->textLE->setText(mSettings.value("text", "").toString());
+  ui->showTextCB->setChecked(mSettings.value("showText", false).toBool());
+  ui->textLE->setText(mSettings.value("text", "").toString());
 
-    QString menuFile = mSettings.value("menu_file", "").toString();
-    if (menuFile.isEmpty())
-    {
-        menuFile = XdgMenu::getMenuFileName();
-    }
-    ui->menuFilePathLE->setText(menuFile);
+  QString menuFile = mSettings.value("menu_file", "").toString();
+  if (menuFile.isEmpty()) {
+    menuFile = XdgMenu::getMenuFileName();
+  }
+  ui->menuFilePathLE->setText(menuFile);
 }
 
 void GeuzenMenuConfig::textButtonChanged(QString value)
 {
-    mSettings.setValue("text", value);
+  mSettings.setValue("text", value);
 }
 
 void GeuzenMenuConfig::showTextChanged(bool value)
 {
-    mSettings.setValue("showText", value);
+  mSettings.setValue("showText", value);
 }
 
 void GeuzenMenuConfig::chooseMenuFile()
 {
-    QString path = QFileDialog::getOpenFileName(this, tr("Choose menu file"), "~", tr("Menu files (*.menu)"));
-    if (!path.isEmpty())
-    {
-        ui->menuFilePathLE->setText(path);
-        mSettings.setValue("menu_file", path);
-    }
+  QString path = QFileDialog::getOpenFileName(this, tr("Choose menu file"), "~", tr("Menu files (*.menu)"));
+  if (!path.isEmpty()) {
+    ui->menuFilePathLE->setText(path);
+    mSettings.setValue("menu_file", path);
+  }
 }
 
 void GeuzenMenuConfig::dialogButtonsAction(QAbstractButton *btn)
 {
-    if (ui->buttons->buttonRole(btn) == QDialogButtonBox::ResetRole)
-    {
-        mOldSettings.loadToSettings();
-        loadSettings();
-    }
-    else
-    {
-        close();
-    }
+  if (ui->buttons->buttonRole(btn) == QDialogButtonBox::ResetRole) {
+    mOldSettings.loadToSettings();
+    loadSettings();
+  } else {
+    close();
+  }
 }

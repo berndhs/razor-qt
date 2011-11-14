@@ -1,4 +1,4 @@
-/* 
+/*
  *
  * Copyright: 2011 Bernd Stramm
  *
@@ -17,7 +17,7 @@
  * Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA 02110-1301 USA
  *
- * 
+ *
  */
 
 
@@ -48,25 +48,25 @@ namespace geuzen
 /************************************************
 
  ************************************************/
-GeuzenMainMenu::GeuzenMainMenu(const RazorPanelPluginStartInfo* startInfo, 
-                                     QWidget* parent):
-    RazorPanelPlugin(startInfo, parent),
-    mMenu(0)
+GeuzenMainMenu::GeuzenMainMenu(const RazorPanelPluginStartInfo* startInfo,
+                               QWidget* parent):
+  RazorPanelPlugin(startInfo, parent),
+  mMenu(0)
 {
-    setObjectName("MainMenu");
+  setObjectName("MainMenu");
 
-    addWidget(&mButton);
-    connect(&mButton, SIGNAL(clicked()), this, SLOT(showMenu()));
-    mPowerManager = new PowerManager(this);
-    mPowerManager->setParentWidget(panel());
+  addWidget(&mButton);
+  connect(&mButton, SIGNAL(clicked()), this, SLOT(showMenu()));
+  mPowerManager = new PowerManager(this);
+  mPowerManager->setParentWidget(panel());
 
-    mScreenSaver = new ScreenSaver(this);
+  mScreenSaver = new ScreenSaver(this);
 
-    settigsChanged();
+  settigsChanged();
 
-    QSizePolicy sp = mButton.sizePolicy();
-    sp.setVerticalPolicy(QSizePolicy::Minimum);
-    mButton.setSizePolicy(sp);
+  QSizePolicy sp = mButton.sizePolicy();
+  sp.setVerticalPolicy(QSizePolicy::Minimum);
+  mButton.setSizePolicy(sp);
 
 }
 
@@ -84,40 +84,39 @@ GeuzenMainMenu::~GeuzenMainMenu()
  ************************************************/
 void GeuzenMainMenu::showMenu()
 {
-    if (mXdgMenu.isOutDated())
-        buildMenu();
+  if (mXdgMenu.isOutDated())
+    buildMenu();
 
-    if (!mMenu)
-        return;
+  if (!mMenu)
+    return;
 
-    int x, y;
+  int x, y;
 
-    switch (panel()->position())
-    {
-        case RazorPanel::PositionTop:
-            x = mButton.mapToGlobal(QPoint(0, 0)).x();
-            y = panel()->mapToGlobal(QPoint(0, panel()->sizeHint().height())).y();
-            break;
+  switch (panel()->position()) {
+  case RazorPanel::PositionTop:
+    x = mButton.mapToGlobal(QPoint(0, 0)).x();
+    y = panel()->mapToGlobal(QPoint(0, panel()->sizeHint().height())).y();
+    break;
 
-        case RazorPanel::PositionBottom:
-            x = mButton.mapToGlobal(QPoint(0, 0)).x();
-            y = panel()->mapToGlobal(QPoint(0, 0)).y() - mMenu->sizeHint().height();
-            break;
+  case RazorPanel::PositionBottom:
+    x = mButton.mapToGlobal(QPoint(0, 0)).x();
+    y = panel()->mapToGlobal(QPoint(0, 0)).y() - mMenu->sizeHint().height();
+    break;
 
-        case RazorPanel::PositionLeft:
-            x = panel()->mapToGlobal(QPoint(panel()->sizeHint().width(), 0)).x();
-            y = mButton.mapToGlobal(QPoint(0, 0)).y();
-            break;
+  case RazorPanel::PositionLeft:
+    x = panel()->mapToGlobal(QPoint(panel()->sizeHint().width(), 0)).x();
+    y = mButton.mapToGlobal(QPoint(0, 0)).y();
+    break;
 
-        case RazorPanel::PositionRight:
-            x = panel()->mapToGlobal(QPoint(0, 0)).x() - mMenu->sizeHint().width();
-            y = mButton.mapToGlobal(QPoint(0, 0)).y();
-            break;
+  case RazorPanel::PositionRight:
+    x = panel()->mapToGlobal(QPoint(0, 0)).x() - mMenu->sizeHint().width();
+    y = mButton.mapToGlobal(QPoint(0, 0)).y();
+    break;
 
-    }
+  }
 
-    QPoint pos(x, y);
-    mMenu->exec(pos);
+  QPoint pos(x, y);
+  mMenu->exec(pos);
 }
 
 
@@ -126,20 +125,17 @@ void GeuzenMainMenu::showMenu()
  ************************************************/
 void GeuzenMainMenu::settigsChanged()
 {
-    if (settings().value("showText", false).toBool() == false)
-    {
-        mButton.setText(NULL);
-    }
-    else
-    {
-        mButton.setText(settings().value("text", "Start").toString());
-    }
-    mLogDir = settings().value("log_dir", "").toString();
-    mTopMenuStyle.setIconSize(settings().value("top_icon_size", 16).toInt());
+  if (settings().value("showText", false).toBool() == false) {
+    mButton.setText(NULL);
+  } else {
+    mButton.setText(settings().value("text", "Start").toString());
+  }
+  mLogDir = settings().value("log_dir", "").toString();
+  mTopMenuStyle.setIconSize(settings().value("top_icon_size", 16).toInt());
 
-    mMenuFile = settings().value("menu_file", "").toString();
-    if (mMenuFile.isEmpty())
-        mMenuFile = XdgMenu::getMenuFileName();
+  mMenuFile = settings().value("menu_file", "").toString();
+  if (mMenuFile.isEmpty())
+    mMenuFile = XdgMenu::getMenuFileName();
 }
 
 
@@ -148,48 +144,44 @@ void GeuzenMainMenu::settigsChanged()
  ************************************************/
 void GeuzenMainMenu::buildMenu()
 {
-    mXdgMenu.setEnvironments("X-RAZOR");
-    mXdgMenu.setLogDir(mLogDir);
+  mXdgMenu.setEnvironments("X-RAZOR");
+  mXdgMenu.setLogDir(mLogDir);
 
-    bool res = mXdgMenu.read(mMenuFile);
-    if (res)
-    {
-        if (!mMenu) {
-          mMenu = new MenuView (mXdgMenu, "", this);
-          mMenu->init (MenuView::GridView);
-          mMenu->setObjectName("TopLevelMainMenu");
-          mMenu->setStyle(&mTopMenuStyle);
-        } else {
-          mMenu->reload (mXdgMenu);
-        }
+  bool res = mXdgMenu.read(mMenuFile);
+  if (res) {
+    if (!mMenu) {
+      mMenu = new MenuView (mXdgMenu, "", this);
+      mMenu->init (MenuView::GridView);
+      mMenu->setObjectName("TopLevelMainMenu");
+      mMenu->setStyle(&mTopMenuStyle);
+    } else {
+      mMenu->reload (mXdgMenu);
     }
-    else
-    {
-        QMessageBox::warning(this, "Parse error", mXdgMenu.errorString());
-        return;
-    }
+  } else {
+    QMessageBox::warning(this, "Parse error", mXdgMenu.errorString());
+    return;
+  }
 
 #if 0
-    QMenu* leaveMenu = mMenu->addMenu(XdgIcon::fromTheme("system-shutdown"), tr("Leave"));
-    leaveMenu->addActions(mPowerManager->availableActions());
+  QMenu* leaveMenu = mMenu->addMenu(XdgIcon::fromTheme("system-shutdown"), tr("Leave"));
+  leaveMenu->addActions(mPowerManager->availableActions());
 
-    mMenu->addActions(mScreenSaver->availableActions());
+  mMenu->addActions(mScreenSaver->availableActions());
 #endif
 }
 
 void GeuzenMainMenu::showConfigureDialog()
 {
-    GeuzenMenuConfig *confWindow =
-            this->findChild<GeuzenMenuConfig*>("MainMenuConfigWindow");
+  GeuzenMenuConfig *confWindow =
+    this->findChild<GeuzenMenuConfig*>("MainMenuConfigWindow");
 
-    if (!confWindow)
-    {
-        confWindow = new GeuzenMenuConfig(settings(), this);
-    }
+  if (!confWindow) {
+    confWindow = new GeuzenMenuConfig(settings(), this);
+  }
 
-    confWindow->show();
-    confWindow->raise();
-    confWindow->activateWindow();
+  confWindow->show();
+  confWindow->raise();
+  confWindow->activateWindow();
 }
 
 } // namespace
