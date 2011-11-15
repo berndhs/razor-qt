@@ -61,6 +61,12 @@ void
 MenuView::startApplication (int appTag)
 {
   std::cerr << __PRETTY_FUNCTION__ << " tag " << appTag<< std::endl;
+  if (apps.contains (appTag)) {
+     std::cerr << "   start app " 
+               << apps[appTag].fileName().toStdString() << std::endl;
+     apps[appTag].startDetached ();
+  }
+  navigate (-1);
 }
 
 void
@@ -192,7 +198,7 @@ MenuView::insertAppLink (MenuModel * parseModel, const QDomElement & elt)
   }
   std::cerr << "  application title " << title.toStdString() << std::endl;
   QString desktopFile = elt.attribute ("desktopFile");
-  apps[nextAppTag] = desktopFile;
+  apps[nextAppTag] = XdgDesktopFile (desktopFile, this);
   parseModel->addAppLink (title, desktopFile, nextAppTag);
   nextAppTag++;
 }

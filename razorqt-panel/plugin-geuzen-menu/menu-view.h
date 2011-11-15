@@ -8,6 +8,7 @@
 #include <QtDeclarative/QDeclarativeContext>
 
 #include <qtxdg/xdgmenu.h>
+#include <qtxdg/xdgdesktopfile.h>
 
 #include "menu-model.h"
 
@@ -46,7 +47,7 @@ private slots:
 private:
 
   typedef QMap <int, MenuModel*>  ModelMap;
-  typedef QMap <int, QString>     AppMap;
+  typedef QMap <int, XdgDesktopFile>     AppMap;
 
   void readModel (MenuModel * parseMode, const XdgMenu & xdgMenu);
   void parseDom (MenuModel * parseMode, const QDomElement & root);
