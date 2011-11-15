@@ -8,10 +8,19 @@
 namespace geuzen
 {
 
+enum MenuEntryKind {
+  Entry_None = 0,
+  Entry_Menu = 1,
+  Entry_Application = 2,
+  Entry_Navigate = 3
+};
+
 class MenuModel : public QAbstractListModel
 {
   Q_OBJECT
 public:
+
+
   MenuModel (QObject * parent=0);
 
   int rowCount (const QModelIndex & parent = QModelIndex()) const;
@@ -23,6 +32,10 @@ public:
   void addAppLink (const QString & title,
                    const QString & desktop,
                    int       appTag);
+  void addNavigate (const QString & title, 
+                   int       tag);
+
+  void fakeReset ();
 
 private:
 
@@ -30,22 +43,17 @@ private:
     Type_ImageFile = Qt::UserRole +1,
     Type_Name      = Qt::UserRole +2,
     Type_IsSubmenu = Qt::UserRole +3,
-    Type_MenuTag   = Qt::UserRole +4,
-    Type_LeafTag   = Qt::UserRole +5
-  };
-  enum EntryKind {
-    Entry_None = 0,
-    Entry_Menu = 1,
-    Entry_Application = 2
+    Type_ItemTag   = Qt::UserRole +4,
+    Type_EntryKind = Qt::UserRole +5
   };
 
   struct Entry {
-    Entry (QString ti, QString d, EntryKind ty, int tg)
+    Entry (QString ti, QString d, MenuEntryKind ty, int tg)
       :title (ti), desktop (d), tipo (ty), tag (tg)
     {}
     QString    title;
     QString    desktop;
-    EntryKind  tipo;
+    MenuEntryKind  tipo;
     int        tag;
   };
 

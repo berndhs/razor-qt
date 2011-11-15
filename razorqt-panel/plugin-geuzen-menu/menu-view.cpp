@@ -10,17 +10,64 @@ MenuView::MenuView (const XdgMenu & xdgMenu,
                     QWidget *parent)
   :QDeclarativeView (parent),
    topModel (0),
-   currentModel (0),
    nextSubTag (0),
    nextAppTag (0)
 {
   topModel = new MenuModel (this);
-  subMenus[nextSubTag] = topModel;
+  topModelTag = nextSubTag;
+  modelTagStack.prepend (topModelTag);
+  subMenus[topModelTag] = topModel;
   nextSubTag++;
   readModel (topModel, xdgMenu);
   setWindowFlags (Qt::Window | Qt::FramelessWindowHint);
 }
 
+void
+MenuView::selected (int kind, int tag)
+{
+  std::cerr << __PRETTY_FUNCTION__ << " kind " << kind << " tag " << tag << std::endl;
+ 
+  switch (kind) {
+  case Entry_Menu:
+    switchMenu (tag);
+    break;
+  case Entry_Application:
+    startApplication (tag);
+    break;
+  case Entry_Navigate:
+    navigate (tag);
+    break;
+  default:
+    std::cerr << "      bad kind " << kind;
+    break;
+  }
+}
+
+void
+MenuView::switchMenu (int menuTag)
+{
+  std::cerr << __PRETTY_FUNCTION__ << " tag " << menuTag << std::endl;
+  if (subMenus.contains (menuTag)) {
+    MenuModel * subModel = subMenus[menuTag];
+    if (subModel) {
+      context->setContextProperty ("cppMenuModel",subModel);
+      subModel->fakeReset ();
+    }
+  }
+}
+
+void
+MenuView::startApplication (int appTag)
+{
+  std::cerr << __PRETTY_FUNCTION__ << " tag " << appTag<< std::endl;
+}
+
+void
+MenuView::navigate (int naviTag)
+{
+  std::cerr << __PRETTY_FUNCTION__ << " tag " << naviTag<< std::endl;
+  switchMenu (naviTag);
+}
 void
 MenuView::reload (const XdgMenu & xdgMenu)
 {
@@ -75,6 +122,8 @@ MenuView::init (ViewType viewType)
   qmlRoot = qobject_cast <QDeclarativeItem*> (rootObject());
   if (qmlRoot) {
     connect (qmlRoot, SIGNAL (cancelled()), this, SLOT (cancel()));
+    connect (qmlRoot, SIGNAL (selected (int, int)),
+             this, SLOT (selected (int, int)));
   }
   hide ();
 }
@@ -88,12 +137,12 @@ MenuView::cancel ()
 void
 MenuView::parseDom (MenuModel * parseModel, const QDomElement & root)
 {
-  std::cout << __PRETTY_FUNCTION__ << parseModel << std::endl;
+  std::cerr << __PRETTY_FUNCTION__ << parseModel << std::endl;
   QDomElement  elt;
   for (elt = root.firstChildElement ();
        !elt.isNull();
        elt = elt.nextSiblingElement ()) {
-    std::cout << " tag " << elt.tagName().toStdString() << std::endl;
+    std::cerr << " tag " << elt.tagName().toStdString() << std::endl;
     if (elt.tagName() == "Menu") {
       startSubMenu (parseModel, elt);
     } else if (elt.tagName() == "AppLink") {
@@ -111,13 +160,19 @@ MenuView::startSubMenu (MenuModel * parseModel, const QDomElement & root)
   } else {
     title = root.attribute ("title");
   }
-  std::cout << "  submenu title " << title.toStdString() << std::endl;
+  std::cerr << "  submenu title " << title.toStdString() << std::endl;
   QString desktopFile = root.attribute ("desktopFile");
   MenuModel * subModel = new MenuModel (this);
-  subMenus[nextSubTag] = subModel;
-  parseModel->addSubmenu (title, desktopFile, nextSubTag);
+  int subTag = nextSubTag;
   nextSubTag++;
+  int previousTag = modelTagStack.first();
+  subMenus[subTag] = subModel;
+  parseModel->addSubmenu (title, desktopFile, subTag);
+  subModel->addNavigate (QString ("<<"),topModelTag);
+  subModel->addNavigate (QString ("<"),previousTag);
+  modelTagStack.prepend (previousTag);
   parseDom (subModel, root);
+  modelTagStack.removeFirst ();
 }
 
 void
@@ -129,7 +184,7 @@ MenuView::insertAppLink (MenuModel * parseModel, const QDomElement & elt)
   } else {
     title = elt.attribute ("title");
   }
-  std::cout << "  application title " << title.toStdString() << std::endl;
+  std::cerr << "  application title " << title.toStdString() << std::endl;
   QString desktopFile = elt.attribute ("desktopFile");
   apps[nextAppTag] = desktopFile;
   parseModel->addAppLink (title, desktopFile, nextAppTag);

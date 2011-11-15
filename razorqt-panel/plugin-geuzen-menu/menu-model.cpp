@@ -13,10 +13,10 @@ MenuModel::MenuModel (QObject *parent)
 {
   QHash <int, QByteArray> daroles;
   daroles[Type_ImageFile] = "imagename";
-  daroles[Type_Name] = "title";
+  daroles[Type_Name] = "itemTitle";
   daroles[Type_IsSubmenu] = "isMenu";
-  daroles[Type_MenuTag] = "menuTag";
-  daroles[Type_LeafTag] = "appTag";
+  daroles[Type_ItemTag] = "itemTag";
+  daroles[Type_EntryKind] = "itemKind";
   setRoleNames (daroles);
 }
 
@@ -43,11 +43,11 @@ MenuModel::data (const QModelIndex & index, int role) const
   case Type_IsSubmenu:
     retVar = (item.tipo == Entry_Menu);
     break;
-  case Type_MenuTag:
-    retVar = (item.tipo == Entry_Menu ? item.tag : -1);
+  case Type_ItemTag:
+    retVar = item.tag;
     break;
-  case Type_LeafTag:
-    retVar = (item.tipo == Entry_Application ? item.tag : -1);
+  case Type_EntryKind:
+    retVar = item.tipo;
     break;
   default:
     break;
@@ -60,8 +60,10 @@ MenuModel::addSubmenu (const QString & title,
                        const QString & desktop,
                        int       menuTag)
 {
+  beginInsertRows (QModelIndex(), items.count(), items.count());
   items.append (Entry (title, desktop, Entry_Menu, menuTag));
-  std::cout << __PRETTY_FUNCTION__
+  endInsertRows ();
+  std::cerr << __PRETTY_FUNCTION__
             << " item " << items.count()
             << " " << title.toStdString()
             << " " << desktop.toStdString ()
@@ -73,12 +75,35 @@ MenuModel::addAppLink (const QString & title,
                        const QString & desktop,
                        int       appTag)
 {
+  beginInsertRows (QModelIndex(), items.count(), items.count());
   items.append (Entry (title, desktop, Entry_Application, appTag));
-  std::cout << __PRETTY_FUNCTION__
+  endInsertRows ();
+  std::cerr << __PRETTY_FUNCTION__
             << " item " << items.count()
             << " " << title.toStdString()
             << " " << desktop.toStdString ()
             << std::endl;
+}
+
+void
+MenuModel::addNavigate (const QString & title,
+                        int tag)
+{
+  beginInsertRows (QModelIndex(), items.count(), items.count());
+  items.append (Entry (title, "", Entry_Navigate, tag));
+  endInsertRows ();
+  std::cerr << __PRETTY_FUNCTION__
+            << " item " << items.count()
+            << " " << title.toStdString()
+            << " navigate " << tag
+            << std::endl;
+}
+
+void
+MenuModel::fakeReset ()
+{
+  beginResetModel ();
+  endResetModel ();
 }
 
 } // namespace

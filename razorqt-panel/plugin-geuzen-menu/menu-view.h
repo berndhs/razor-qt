@@ -41,6 +41,7 @@ private slots:
   void goToTop ();
   void goUp ();
   void goDown (int menuTag);
+  void selected (int kind, int tag);
 
 private:
 
@@ -52,9 +53,14 @@ private:
   void startSubMenu (MenuModel * parseMode, const QDomElement & root);
   void insertAppLink (MenuModel * parseMode, const QDomElement & elt);
 
+  void switchMenu (int menuTag);
+  void startApplication (int appTag);
+  void navigate (int naviTag);
+
 
   MenuModel            *topModel;
-  MenuModel            *currentModel;
+  int                   topModelTag;
+  QList<int>            modelTagStack;
   int                   nextSubTag;
   int                   nextAppTag;
   ModelMap              subMenus;

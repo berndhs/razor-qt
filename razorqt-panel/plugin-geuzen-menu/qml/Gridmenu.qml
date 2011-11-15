@@ -9,7 +9,10 @@ Rectangle {
   property real gridCellHeight: 50
   property real itemWidth: 92
   property real itemHeight: 48
+
   signal cancelled ()
+  signal selected (int kind, int tag)
+
   Text {
     id: titleText
     anchors {
@@ -43,7 +46,13 @@ Rectangle {
         anchors.centerIn: parent
         elide: Text.ElideRight
         width: parent.width
-        text: (isMenu ? "M " : "A ") + title 
+        text: (isMenu ? "M " : "A ") + itemTitle 
+      }
+      MouseArea {
+        anchors.fill: parent
+        onClicked: {
+          mainBox.selected (itemKind, itemTag)
+        }
       }
     }
   }
