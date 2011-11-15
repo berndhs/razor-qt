@@ -15,6 +15,7 @@ MenuView::MenuView (const XdgMenu & xdgMenu,
 {
   topModel = new MenuModel (this);
   topModelTag = nextSubTag;
+  topModel->addNavigate (QString ("0-0-0"),-1);
   modelTagStack.prepend (topModelTag);
   subMenus[topModelTag] = topModel;
   nextSubTag++;
@@ -66,7 +67,12 @@ void
 MenuView::navigate (int naviTag)
 {
   std::cerr << __PRETTY_FUNCTION__ << " tag " << naviTag<< std::endl;
-  switchMenu (naviTag);
+  if (naviTag < 0) {
+    switchMenu (topModelTag);
+    hide ();
+  } else {
+    switchMenu (naviTag);
+  }
 }
 void
 MenuView::reload (const XdgMenu & xdgMenu)
