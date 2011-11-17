@@ -7,9 +7,10 @@
 #include <QtDeclarative/QDeclarativeItem>
 #include <QtDeclarative/QDeclarativeContext>
 
+
 #include <qtxdg/xdgmenu.h>
 #include <qtxdg/xdgdesktopfile.h>
-
+#include "geuzen-imagepro.h"
 #include "menu-model.h"
 
 namespace geuzen
@@ -68,6 +69,7 @@ private:
   AppMap                apps;
   QDeclarativeItem    * qmlRoot;
   QDeclarativeContext * context;
+  ImagePro              imagePro;
 };
 
 } // namespace

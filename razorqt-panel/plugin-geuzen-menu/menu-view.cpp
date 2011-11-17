@@ -2,6 +2,7 @@
 #include <QDebug>
 #include <QMessageBox>
 #include <iostream>
+#include <QtDeclarative/QDeclarativeEngine>
 
 namespace geuzen
 {
@@ -13,6 +14,9 @@ MenuView::MenuView (const XdgMenu & xdgMenu,
    nextSubTag (0),
    nextAppTag (0)
 {
+  setAttribute(Qt::WA_TranslucentBackground);
+  setStyleSheet("background:transparent;");
+
   topModel = new MenuModel (this);
   topModelTag = nextSubTag;
   topModel->addNavigate (QString ("0-0-0"),-1);
@@ -21,6 +25,7 @@ MenuView::MenuView (const XdgMenu & xdgMenu,
   nextSubTag++;
   readModel (topModel, xdgMenu);
   setWindowFlags (Qt::Window | Qt::FramelessWindowHint);
+  engine()->addImageProvider (QLatin1String("menuicons"),&imagePro);
 }
 
 void
@@ -199,7 +204,11 @@ MenuView::insertAppLink (MenuModel * parseModel, const QDomElement & elt)
   std::cerr << "  application title " << title.toStdString() << std::endl;
   QString desktopFile = elt.attribute ("desktopFile");
   apps[nextAppTag] = XdgDesktopFile (desktopFile, this);
-  parseModel->addAppLink (title, desktopFile, nextAppTag);
+  QString imageName (QString("appimg%1").arg(nextAppTag));
+  QString imageUrl (QString ("image://menuicons/%1").arg(imageName));
+  imagePro.addIcon (imageName, apps[nextAppTag].icon());
+  parseModel->addAppLink (title, desktopFile, 
+                          nextAppTag, imageUrl);
   nextAppTag++;
 }
 

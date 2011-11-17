@@ -1,7 +1,16 @@
 # norootforbuild
 
+%if X%{_vendor} == Xmeego
+	%define breq pkgconfig(QtGui), pkgconfig(QtDeclarative), libXcomposite-devel, pkgconfig(QtWebKit), pkgconfig(QtXml), pkgconfig(zlib)
+	%define qmake /usr/bin/qmake
+	%define lrelease /usr/bin/lrelease
+	%define uic /usr/bin/uic
+	%define qtxdglib libqtxdg
+	%define qtxdglibdevel libqtxdg-devel
+%endif
+
 %if 0%{?fedora} || 0%{?centos_version}
-	%define breq qt4-devel >= 4.6.0, libXcomposite-devel
+	%define breq qt4-devel >= 4.6.0, libXcomposite-devel, pkgconfig(zlib)
 	%define qmake /usr/bin/qmake-qt4
 	%define lrelease /usr/bin/lrelease-qt4
 	%define uic /usr/bin/uic-qt4
@@ -156,6 +165,7 @@ Description:	%{summary}
 
 %build
 _libsuffix=$(echo %{_lib} | cut -b4-)
+echo "building for vendor " %{_vendor}
 cmake . -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=release -DLIB_SUFFIX=$_libsuffix
 make
 

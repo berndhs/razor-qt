@@ -12,7 +12,7 @@ MenuModel::MenuModel (QObject *parent)
   :QAbstractListModel (parent)
 {
   QHash <int, QByteArray> daroles;
-  daroles[Type_ImageFile] = "imagename";
+  daroles[Type_IconName] = "iconName";
   daroles[Type_Name] = "itemTitle";
   daroles[Type_IsSubmenu] = "isMenu";
   daroles[Type_ItemTag] = "itemTag";
@@ -37,6 +37,9 @@ MenuModel::data (const QModelIndex & index, int role) const
   }
   Entry  item = items.at(row);
   switch (role) {
+  case Type_IconName:
+    retVar = item.iconName;
+    break;
   case Type_Name:
     retVar = item.title;
     break;
@@ -73,10 +76,11 @@ MenuModel::addSubmenu (const QString & title,
 void
 MenuModel::addAppLink (const QString & title,
                        const QString & desktop,
-                       int       appTag)
+                       int       appTag,
+                       const QString   & iconName)
 {
   beginInsertRows (QModelIndex(), items.count(), items.count());
-  items.append (Entry (title, desktop, Entry_Application, appTag));
+  items.append (Entry (title, desktop, Entry_Application, appTag, iconName));
   endInsertRows ();
   std::cerr << __PRETTY_FUNCTION__
             << " item " << items.count()

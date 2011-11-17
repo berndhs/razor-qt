@@ -26,6 +26,7 @@ function list_contains_count () {
 
 ALL_ARGS=$*
 NAME=razorqt
+PROJECT=${NAME}
 CHANGELOG=${NAME}.changes
 HARMAT_TEMP_DIR=${NAME}.orig
 VERSION=$(sh version.sh)
@@ -50,8 +51,19 @@ cp ${TARFILE} ${CHANGELOG} ${RPM_PACKDIR}
   cd ${RPM_PACKDIR}
   make spec
 )
+echo "done making spec file"
 if [ 0$WANT_OBS -ge 1 ]; then
-  cp ${RPM_PACKDIR}/${PROJECT}.spec ${CHANGELOG} suse_obs/ 
+  echo "obs copy: "
+  for OBS_DIR in suse_obs meego_obs ; do
+    set -x
+    cp ${TARFILE} \
+       ${RPM_PACKDIR}/${PROJECT}.spec \
+       ${CHANGELOG} \
+       ${OBS_DIR}/ 
+    set +x
+  done
+else
+  echo "no obs copy requested"
 fi
 
 set +x

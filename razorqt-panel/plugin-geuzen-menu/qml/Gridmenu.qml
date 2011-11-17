@@ -3,12 +3,17 @@ import QtQuick 1.0
 Rectangle {
   id: mainBox
   width: 600; height: 400
+  radius: 8
   color: "lightblue"
   opacity: 0.75
-  property real gridCellWidth: 100
+  property real gridCellWidth: 200
   property real gridCellHeight: 50
-  property real itemWidth: 92
+  property real itemWidth: 196
   property real itemHeight: 48
+  property real iconWidth: 48
+  property real iconHeight: 48
+  property real labelWidth: itemWidth - iconWidth - 2
+  property alias title: titleText.text
 
   signal cancelled ()
   signal selected (int kind, int tag)
@@ -41,12 +46,21 @@ Rectangle {
       height: mainBox.itemHeight
       color: Qt.lighter (mainBox.color)
       radius: 6
-      Text {
-        id: itemText
+      Row {
+        spacing: 2
         anchors.centerIn: parent
-        elide: Text.ElideRight
-        width: parent.width
-        text: (isMenu ? "M " : "A ") + itemTitle 
+        height: mainBox.itemHeight
+        Image {
+          width: mainBox.iconWidth
+          height: mainBox.iconHeight
+          source: iconName
+        }
+        Text {
+          id: itemText
+          elide: Text.ElideRight
+          width: mainBox.labelWidth
+          text: (isMenu ? "M " : "") + itemTitle 
+        }
       }
       MouseArea {
         anchors.fill: parent

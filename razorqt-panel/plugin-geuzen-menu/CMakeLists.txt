@@ -9,6 +9,7 @@ set(HEADERS
     menustyle.h
     geuzen-main-menu.h
     geuzen-menu-config.h
+    geuzen-imagepro.h
 )
 
 set(SOURCES
@@ -17,6 +18,7 @@ set(SOURCES
     menustyle.cpp
     geuzen-main-menu.cpp
     geuzen-menu-config.cpp
+    geuzen-imagepro.cpp
 )
 
 set(MOCS

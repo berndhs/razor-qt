@@ -31,7 +31,8 @@ public:
                    int       menuTag);
   void addAppLink (const QString & title,
                    const QString & desktop,
-                   int       appTag);
+                   int       appTag,
+                   const QString & iconName);
   void addNavigate (const QString & title, 
                    int       tag);
 
@@ -40,7 +41,7 @@ public:
 private:
 
   enum DataType {
-    Type_ImageFile = Qt::UserRole +1,
+    Type_IconName  = Qt::UserRole +1,
     Type_Name      = Qt::UserRole +2,
     Type_IsSubmenu = Qt::UserRole +3,
     Type_ItemTag   = Qt::UserRole +4,
@@ -48,16 +49,22 @@ private:
   };
 
   struct Entry {
-    Entry (QString ti, QString d, MenuEntryKind ty, int tg)
-      :title (ti), desktop (d), tipo (ty), tag (tg)
+    Entry (const QString & ti = QString(), 
+           const QString & d = QString(), 
+           MenuEntryKind  ty = Entry_None, 
+                     int  tg = -1,
+           const QString & in = QString())
+      :title (ti), desktop (d), tipo (ty), tag (tg), iconName (in)
     {}
     QString    title;
     QString    desktop;
     MenuEntryKind  tipo;
     int        tag;
+    QString    iconName;
   };
 
   QList <Entry>  items;
+ 
 };
 
 } // namespace
