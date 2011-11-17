@@ -10,8 +10,8 @@ Rectangle {
   property real gridCellHeight: 50
   property real itemWidth: 196
   property real itemHeight: 48
-  property real iconWidth: 48
-  property real iconHeight: 48
+  property real iconWidth: 32
+  property real iconHeight: 32
   property real labelWidth: itemWidth - iconWidth - 2
   property alias title: titleText.text
 
@@ -23,7 +23,7 @@ Rectangle {
     anchors {
       top: mainBox.top; horizontalCenter: mainBox.horizontalCenter 
     }
-    text: "No Grid Menu Implementation"
+    text: ""
     MouseArea {
       anchors.fill: parent
       onClicked: {

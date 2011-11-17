@@ -14,8 +14,7 @@ MenuView::MenuView (const XdgMenu & xdgMenu,
    nextSubTag (0),
    nextAppTag (0)
 {
-  setAttribute(Qt::WA_TranslucentBackground);
-  setStyleSheet("background:transparent;");
+  setStyleSheet ("background:transparent;");
 
   topModel = new MenuModel (this);
   topModelTag = nextSubTag;
@@ -25,6 +24,8 @@ MenuView::MenuView (const XdgMenu & xdgMenu,
   nextSubTag++;
   readModel (topModel, xdgMenu);
   setWindowFlags (Qt::Window | Qt::FramelessWindowHint);
+  setAttribute (Qt::WA_NoSystemBackground);
+  setAttribute (Qt::WA_TranslucentBackground);
   engine()->addImageProvider (QLatin1String("menuicons"),&imagePro);
 }
 
@@ -202,12 +203,13 @@ MenuView::insertAppLink (MenuModel * parseModel, const QDomElement & elt)
     title = elt.attribute ("title");
   }
   std::cerr << "  application title " << title.toStdString() << std::endl;
-  QString desktopFile = elt.attribute ("desktopFile");
-  apps[nextAppTag] = XdgDesktopFile (desktopFile, this);
+  QString desktopPath = elt.attribute ("desktopFile");
+  apps[nextAppTag] = XdgDesktopFile (desktopPath, this);
+  XdgDesktopFile & desk (apps[nextAppTag]);
   QString imageName (QString("appimg%1").arg(nextAppTag));
   QString imageUrl (QString ("image://menuicons/%1").arg(imageName));
-  imagePro.addIcon (imageName, apps[nextAppTag].icon());
-  parseModel->addAppLink (title, desktopFile, 
+  imagePro.addIcon (imageName, desk.icon());
+  parseModel->addAppLink (desk.name(), desktopPath, 
                           nextAppTag, imageUrl);
   nextAppTag++;
 }

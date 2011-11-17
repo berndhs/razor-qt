@@ -17,7 +17,7 @@ ImagePro::requestPixmap(const QString &id,
             << " " << requestedSize.width() << "x" << requestedSize.height()
             << std::endl;
   QPixmap pixIcon;
-  QSize getSize (256,256);
+  QSize getSize (64,64);
   if (requestedSize.isValid()) {
     getSize = requestedSize;
   }
