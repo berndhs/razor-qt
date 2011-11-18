@@ -40,9 +40,6 @@ public slots:
 
 private slots:
 
-  void goToTop ();
-  void goUp ();
-  void goDown (int menuTag);
   void selected (int kind, int tag);
 
 private:

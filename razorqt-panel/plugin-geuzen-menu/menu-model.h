@@ -36,6 +36,9 @@ public:
   void addNavigate (const QString & title, 
                    int       tag);
 
+  QString title () const;
+  void    setTitle (const QString & title);
+
   void fakeReset ();
 
 private:
@@ -64,6 +67,7 @@ private:
   };
 
   QList <Entry>  items;
+  QString        theTitle;
  
 };
 

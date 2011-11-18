@@ -55,6 +55,7 @@ GeuzenMainMenu::GeuzenMainMenu(const RazorPanelPluginStartInfo* startInfo,
 {
   setObjectName("MainMenu");
 
+  mButton.setIcon (QIcon(":/geuzenmenu.png"));
   addWidget(&mButton);
   connect(&mButton, SIGNAL(clicked()), this, SLOT(showMenu()));
   mPowerManager = new PowerManager(this);

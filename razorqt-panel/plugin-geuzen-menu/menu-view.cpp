@@ -23,9 +23,10 @@ MenuView::MenuView (const XdgMenu & xdgMenu,
   subMenus[topModelTag] = topModel;
   nextSubTag++;
   readModel (topModel, xdgMenu);
+  topModel->setTitle (tr("Applications"));
   setWindowFlags (Qt::Window | Qt::FramelessWindowHint);
-  setAttribute (Qt::WA_NoSystemBackground);
-  setAttribute (Qt::WA_TranslucentBackground);
+  //setAttribute (Qt::WA_NoSystemBackground);
+  //setAttribute (Qt::WA_TranslucentBackground);
   engine()->addImageProvider (QLatin1String("menuicons"),&imagePro);
 }
 
@@ -59,6 +60,9 @@ MenuView::switchMenu (int menuTag)
     if (subModel) {
       context->setContextProperty ("cppMenuModel",subModel);
       subModel->fakeReset ();
+      if (qmlRoot) {
+        qmlRoot->setProperty ("menuTitle",subModel->title());
+      }
     }
   }
 }
@@ -112,14 +116,17 @@ MenuView::readModel (MenuModel * parseModel, const XdgMenu & xdgMenu)
 void
 MenuView::exec (const QPoint & pos)
 {
+  qDebug () << __PRETTY_FUNCTION__ << pos << " size " << size();
+  
   move (pos);
   show ();
+  qDebug () << __PRETTY_FUNCTION__ << isVisible ();
 }
 
 void
 MenuView::init (ViewType viewType)
 {
-  qDebug () << __PRETTY_FUNCTION__;
+  qDebug () << __PRETTY_FUNCTION__ << viewType;
   QString qmlName;
   switch (viewType) {
   case GridView:
@@ -142,8 +149,10 @@ MenuView::init (ViewType viewType)
     connect (qmlRoot, SIGNAL (cancelled()), this, SLOT (cancel()));
     connect (qmlRoot, SIGNAL (selected (int, int)),
              this, SLOT (selected (int, int)));
+    qmlRoot->setProperty ("menuTitle",topModel->title());
   }
-  hide ();
+  //hide ();
+  qDebug () << __PRETTY_FUNCTION__ << " source is " << source();
 }
 
 void
@@ -181,6 +190,7 @@ MenuView::startSubMenu (MenuModel * parseModel, const QDomElement & root)
   std::cerr << "  submenu title " << title.toStdString() << std::endl;
   QString desktopFile = root.attribute ("desktopFile");
   MenuModel * subModel = new MenuModel (this);
+  subModel->setTitle (title);
   int subTag = nextSubTag;
   nextSubTag++;
   int previousTag = modelTagStack.first();

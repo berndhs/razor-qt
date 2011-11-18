@@ -3,9 +3,8 @@ import QtQuick 1.0
 Rectangle {
   id: mainBox
   width: 600; height: 400
-  radius: 8
-  color: "lightblue"
-  opacity: 0.75
+  clip: true
+  color: "#f2f1ef"
   property real gridCellWidth: 200
   property real gridCellHeight: 50
   property real itemWidth: 196
@@ -13,7 +12,7 @@ Rectangle {
   property real iconWidth: 32
   property real iconHeight: 32
   property real labelWidth: itemWidth - iconWidth - 2
-  property alias title: titleText.text
+  property alias menuTitle: titleText.text
 
   signal cancelled ()
   signal selected (int kind, int tag)
@@ -23,7 +22,7 @@ Rectangle {
     anchors {
       top: mainBox.top; horizontalCenter: mainBox.horizontalCenter 
     }
-    text: ""
+    text: "Main Menu"
     MouseArea {
       anchors.fill: parent
       onClicked: {
@@ -35,6 +34,7 @@ Rectangle {
     id: menuGrid
     model: cppMenuModel
     width: mainBox.width
+    clip: true
     cellWidth: mainBox.gridCellWidth
     cellHeight: mainBox.gridCellHeight
     height: mainBox.height - titleText.height
@@ -44,7 +44,8 @@ Rectangle {
     delegate: Rectangle {
       width: mainBox.itemWidth
       height: mainBox.itemHeight
-      color: Qt.lighter (mainBox.color)
+      color: "#f0f0f7"
+      border.color: "#f7f7ff"; border.width: 2
       radius: 6
       Row {
         spacing: 2
@@ -55,11 +56,16 @@ Rectangle {
           height: mainBox.iconHeight
           source: iconName
         }
-        Text {
-          id: itemText
-          elide: Text.ElideRight
-          width: mainBox.labelWidth
-          text: (isMenu ? "M " : "") + itemTitle 
+        Rectangle {
+          width: mainBox.labelWidth; height: mainBox.itemHeight
+          color: "transparent"
+          Text {
+            id: itemText
+            elide: Text.ElideRight
+            width: parent.width
+            anchors.verticalCenter: parent.verticalCenter
+            text: (isMenu ? "M " : "") + itemTitle 
+          }
         }
       }
       MouseArea {
@@ -69,5 +75,8 @@ Rectangle {
         }
       }
     }
+  }
+  Component.onCompleted: {
+    console.log ("loaded main box")
   }
 }

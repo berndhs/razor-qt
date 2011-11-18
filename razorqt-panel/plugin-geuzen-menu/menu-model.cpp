@@ -20,6 +20,18 @@ MenuModel::MenuModel (QObject *parent)
   setRoleNames (daroles);
 }
 
+QString
+MenuModel::title() const
+{
+  return theTitle;
+}
+
+void
+MenuModel::setTitle (const QString & title)
+{
+  theTitle = title;
+}
+
 int
 MenuModel::rowCount (const QModelIndex & parent) const
 {

@@ -27,8 +27,8 @@
  * END_COMMON_COPYRIGHT_HEADER */
 
 
-#ifndef RAZOR_MAINMENU_H
-#define RAZOR_MAINMENU_H
+#ifndef GEUZEN_MAINMENU_H
+#define GEUZEN_MAINMENU_H
 
 #include "../panel/razorpanelplugin.h"
 #include <qtxdg/xdgmenu.h>
