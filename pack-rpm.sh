@@ -55,6 +55,7 @@ echo "done making spec file"
 if [ 0$WANT_OBS -ge 1 ]; then
   echo "obs copy: "
   for OBS_DIR in suse_obs meego_obs ; do
+    echo "Copy -------> " ${OBS_DIR}
     set -x
     cp ${TARFILE} \
        ${RPM_PACKDIR}/${PROJECT}.spec \
