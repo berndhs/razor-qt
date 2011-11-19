@@ -4,7 +4,7 @@ Rectangle {
   id: mainBox
   width: 600; height: 400
   clip: true
-  color: "#f2f1ef"
+  color: "#f0eee9"
   property real gridCellWidth: 200
   property real gridCellHeight: 50
   property real itemWidth: 196
@@ -45,7 +45,7 @@ Rectangle {
       width: mainBox.itemWidth
       height: mainBox.itemHeight
       color: "#f0f0f7"
-      border.color: "#f7f7ff"; border.width: 2
+      border.color: "#f7f9ff"; border.width: 2
       radius: 6
       Row {
         spacing: 2
@@ -64,7 +64,7 @@ Rectangle {
             elide: Text.ElideRight
             width: parent.width
             anchors.verticalCenter: parent.verticalCenter
-            text: (isMenu ? "M " : "") + itemTitle 
+            text: itemTitle 
           }
         }
       }

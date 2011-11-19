@@ -12,7 +12,9 @@ MenuView::MenuView (const XdgMenu & xdgMenu,
   :QDeclarativeView (parent),
    topModel (0),
    nextSubTag (0),
-   nextAppTag (0)
+   nextAppTag (0),
+   menuImage ("menuimage"),
+   menuImageUrl (QString("image://menuicons/") + menuImage)
 {
   setStyleSheet ("background:transparent;");
 
@@ -28,6 +30,7 @@ MenuView::MenuView (const XdgMenu & xdgMenu,
   //setAttribute (Qt::WA_NoSystemBackground);
   //setAttribute (Qt::WA_TranslucentBackground);
   engine()->addImageProvider (QLatin1String("menuicons"),&imagePro);
+  imagePro.addIcon (menuImage,QIcon (":/img/lines.png"));
 }
 
 void
@@ -164,7 +167,6 @@ MenuView::cancel ()
 void
 MenuView::parseDom (MenuModel * parseModel, const QDomElement & root)
 {
-  std::cerr << __PRETTY_FUNCTION__ << parseModel << std::endl;
   QDomElement  elt;
   for (elt = root.firstChildElement ();
        !elt.isNull();
@@ -195,10 +197,10 @@ MenuView::startSubMenu (MenuModel * parseModel, const QDomElement & root)
   nextSubTag++;
   int previousTag = modelTagStack.first();
   subMenus[subTag] = subModel;
-  parseModel->addSubmenu (title, desktopFile, subTag);
+  parseModel->addSubmenu (title, desktopFile, subTag, menuImageUrl);
   subModel->addNavigate (QString ("<<"),topModelTag);
   subModel->addNavigate (QString ("<"),previousTag);
-  modelTagStack.prepend (previousTag);
+  modelTagStack.prepend (subTag);
   parseDom (subModel, root);
   modelTagStack.removeFirst ();
 }
@@ -212,7 +214,6 @@ MenuView::insertAppLink (MenuModel * parseModel, const QDomElement & elt)
   } else {
     title = elt.attribute ("title");
   }
-  std::cerr << "  application title " << title.toStdString() << std::endl;
   QString desktopPath = elt.attribute ("desktopFile");
   apps[nextAppTag] = XdgDesktopFile (desktopPath, this);
   XdgDesktopFile & desk (apps[nextAppTag]);

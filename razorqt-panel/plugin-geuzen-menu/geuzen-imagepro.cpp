@@ -22,9 +22,11 @@ ImagePro::requestPixmap(const QString &id,
     getSize = requestedSize;
   }
   if (icons.contains (id)) {
-    std::cerr << __PRETTY_FUNCTION__ << " have image " << id.toStdString()
-              << std::endl;
     pixIcon = icons[id].pixmap (getSize);
+    std::cerr << __PRETTY_FUNCTION__ << " have image " << id.toStdString()
+              << " size " << pixIcon.size().width() 
+              << "x" << pixIcon.size().height()
+              << std::endl;
     if (size) {
       *size = pixIcon.size();
     }

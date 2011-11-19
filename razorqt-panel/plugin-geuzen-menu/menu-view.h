@@ -62,6 +62,8 @@ private:
   QList<int>            modelTagStack;
   int                   nextSubTag;
   int                   nextAppTag;
+  QString               menuImage;
+  QString               menuImageUrl;
   ModelMap              subMenus;
   AppMap                apps;
   QDeclarativeItem    * qmlRoot;

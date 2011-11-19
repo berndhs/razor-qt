@@ -6,4 +6,7 @@
 <qresource>
   <file>geuzenmenu.png</file>
 </qresource>
+<qresource prefix="/img">
+  <file alias="lines.png">images/lines.png</file>
+</qresource>
 </RCC>

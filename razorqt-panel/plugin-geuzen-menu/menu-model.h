@@ -28,7 +28,8 @@ public:
 
   void addSubmenu (const QString & title,
                    const QString & desktop,
-                   int       menuTag);
+                   int       menuTag,
+                   const QString & iconName);
   void addAppLink (const QString & title,
                    const QString & desktop,
                    int       appTag,

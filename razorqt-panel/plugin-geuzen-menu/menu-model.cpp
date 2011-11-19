@@ -73,10 +73,11 @@ MenuModel::data (const QModelIndex & index, int role) const
 void
 MenuModel::addSubmenu (const QString & title,
                        const QString & desktop,
-                       int       menuTag)
+                       int       menuTag,
+                       const QString & iconName)
 {
   beginInsertRows (QModelIndex(), items.count(), items.count());
-  items.append (Entry (title, desktop, Entry_Menu, menuTag));
+  items.append (Entry (title, desktop, Entry_Menu, menuTag, iconName));
   endInsertRows ();
   std::cerr << __PRETTY_FUNCTION__
             << " item " << items.count()
