@@ -165,6 +165,14 @@ MenuView::cancel ()
 }
 
 void
+MenuView::appendMenu (const XdgMenu & xdgMenu)
+{
+  if (topModel) {
+    readModel (topModel, xdgMenu);
+  }
+}
+
+void
 MenuView::parseDom (MenuModel * parseModel, const QDomElement & root)
 {
   QDomElement  elt;

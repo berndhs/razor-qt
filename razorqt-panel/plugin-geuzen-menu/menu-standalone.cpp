@@ -12,7 +12,7 @@ StandaloneMenu::StandaloneMenu (QWidget *parent)
   :QWidget(parent),
    menuView (0),
    mainButton (0),
-   menuFile ("/etc/xdg/menus/applications.menu")
+   menuFile ("/etc/xdg/menus/razor-applications.menu")
 {
   setObjectName ("StandaloneMenu");
   setWindowIcon (QIcon(":/geuzenmenu.png"));

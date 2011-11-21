@@ -30,6 +30,7 @@ public:
             QWidget *parent=0);
 
   void reload (const XdgMenu & xdgMenu);
+  void appendMenu (const XdgMenu & xdgMenu);
 
 public slots:
 
