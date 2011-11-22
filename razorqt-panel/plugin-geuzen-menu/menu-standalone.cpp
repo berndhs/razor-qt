@@ -4,6 +4,8 @@
 #include <QDebug>
 #include <QTimer>
 #include "menu-standalone.h"
+#include <razorqt/powermanager.h>
+#include <qtxdg/xdgicon.h>
 
 namespace geuzen
 {
@@ -20,6 +22,7 @@ StandaloneMenu::StandaloneMenu (QWidget *parent)
                                 tr("Applications"),
                                 this);
   mainButton->resize (180,48);
+  powerManager = new PowerManager(this);
   buildMenu ();
   connect (mainButton,SIGNAL (clicked()), this, SLOT(showMenu()));
   QTimer::singleShot (2, this, SLOT(hideMenu ()));
@@ -70,6 +73,12 @@ StandaloneMenu::buildMenu ()
   } else {
     QMessageBox::warning(this, "Parse error", xdgMenu.errorString());
     return;
+  }
+  if (menuView) {
+    menuView->appendSubmenuActions (
+             tr("Leave"), 
+             XdgIcon::fromTheme ("system-log-out"),
+             powerManager->availableActions());
   }
 }
 

@@ -7,6 +7,9 @@
 #include "menu-view.h"
 #include <qtxdg/xdgmenu.h>
 
+
+class PowerManager;
+
 namespace geuzen
 {
 class StandaloneMenu : public QWidget
@@ -36,6 +39,7 @@ private:
   QString        mLogDir;
   QString        menuFile;
   XdgMenu        xdgMenu;
+  PowerManager*  powerManager;
   
 
 };

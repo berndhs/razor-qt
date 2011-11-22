@@ -12,7 +12,8 @@ enum MenuEntryKind {
   Entry_None = 0,
   Entry_Menu = 1,
   Entry_Application = 2,
-  Entry_Navigate = 3
+  Entry_Navigate = 3,
+  Entry_Action = 4
 };
 
 class MenuModel : public QAbstractListModel
@@ -26,16 +27,10 @@ public:
   int rowCount (const QModelIndex & parent = QModelIndex()) const;
   QVariant data (const QModelIndex & index, int role = Qt::DisplayRole) const;
 
-  void addSubmenu (const QString & title,
-                   const QString & desktop,
-                   int       menuTag,
+  void addItem (const QString & title,
+                   MenuEntryKind kind,
+                   int           tag,
                    const QString & iconName);
-  void addAppLink (const QString & title,
-                   const QString & desktop,
-                   int       appTag,
-                   const QString & iconName);
-  void addNavigate (const QString & title, 
-                   int       tag);
 
   QString title () const;
   void    setTitle (const QString & title);
@@ -53,18 +48,16 @@ private:
   };
 
   struct Entry {
-    Entry (const QString & ti = QString(), 
-           const QString & d = QString(), 
+    Entry (const QString & ti = QString(),   
            MenuEntryKind  ty = Entry_None, 
                      int  tg = -1,
            const QString & in = QString())
-      :title (ti), desktop (d), tipo (ty), tag (tg), iconName (in)
+      :title (ti), tipo (ty), tag (tg), iconName (in)
     {}
-    QString    title;
-    QString    desktop;
+    QString        title;
     MenuEntryKind  tipo;
-    int        tag;
-    QString    iconName;
+    int            tag;
+    QString        iconName;
   };
 
   QList <Entry>  items;

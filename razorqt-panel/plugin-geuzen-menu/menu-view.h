@@ -6,6 +6,8 @@
 #include <QtXml/QDomDocument>
 #include <QtDeclarative/QDeclarativeItem>
 #include <QtDeclarative/QDeclarativeContext>
+#include <QList>
+#include <QAction>
 
 
 #include <qtxdg/xdgmenu.h>
@@ -31,6 +33,9 @@ public:
 
   void reload (const XdgMenu & xdgMenu);
   void appendMenu (const XdgMenu & xdgMenu);
+  void appendSubmenuActions (const QString & title,
+                             const QIcon & icon,
+                             QList<QAction*>  actions);
 
 public slots:
 
@@ -45,8 +50,9 @@ private slots:
 
 private:
 
-  typedef QMap <int, MenuModel*>  ModelMap;
+  typedef QMap <int, MenuModel*>         ModelMap;
   typedef QMap <int, XdgDesktopFile>     AppMap;
+  typedef QMap <int, QAction*>           ActionMap;
 
   void readModel (MenuModel * parseMode, const XdgMenu & xdgMenu);
   void parseDom (MenuModel * parseMode, const QDomElement & root);
@@ -56,6 +62,7 @@ private:
   void switchMenu (int menuTag);
   void startApplication (int appTag);
   void navigate (int naviTag);
+  void triggerAction (int actionTag);
 
 
   MenuModel            *topModel;
@@ -63,10 +70,16 @@ private:
   QList<int>            modelTagStack;
   int                   nextSubTag;
   int                   nextAppTag;
+  int                   nextActionTag;
   QString               menuImage;
   QString               menuImageUrl;
+  QString               topIcon;
+  QString               topIconUrl;
+  QString               backIcon;
+  QString               backIconUrl;
   ModelMap              subMenus;
   AppMap                apps;
+  ActionMap             actions;
   QDeclarativeItem    * qmlRoot;
   QDeclarativeContext * context;
   ImagePro              imagePro;

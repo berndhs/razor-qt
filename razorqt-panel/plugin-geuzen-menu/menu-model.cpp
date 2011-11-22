@@ -71,50 +71,16 @@ MenuModel::data (const QModelIndex & index, int role) const
 }
 
 void
-MenuModel::addSubmenu (const QString & title,
-                       const QString & desktop,
-                       int       menuTag,
+MenuModel::addItem (const QString & title,
+                       MenuEntryKind kind,
+                       int       tag,
                        const QString & iconName)
 {
   beginInsertRows (QModelIndex(), items.count(), items.count());
-  items.append (Entry (title, desktop, Entry_Menu, menuTag, iconName));
+  items.append (Entry (title, kind, tag, iconName));
   endInsertRows ();
-  std::cerr << __PRETTY_FUNCTION__
-            << " item " << items.count()
-            << " " << title.toStdString()
-            << " " << desktop.toStdString ()
-            << std::endl;
 }
 
-void
-MenuModel::addAppLink (const QString & title,
-                       const QString & desktop,
-                       int       appTag,
-                       const QString   & iconName)
-{
-  beginInsertRows (QModelIndex(), items.count(), items.count());
-  items.append (Entry (title, desktop, Entry_Application, appTag, iconName));
-  endInsertRows ();
-  std::cerr << __PRETTY_FUNCTION__
-            << " item " << items.count()
-            << " " << title.toStdString()
-            << " " << desktop.toStdString ()
-            << std::endl;
-}
-
-void
-MenuModel::addNavigate (const QString & title,
-                        int tag)
-{
-  beginInsertRows (QModelIndex(), items.count(), items.count());
-  items.append (Entry (title, "", Entry_Navigate, tag));
-  endInsertRows ();
-  std::cerr << __PRETTY_FUNCTION__
-            << " item " << items.count()
-            << " " << title.toStdString()
-            << " navigate " << tag
-            << std::endl;
-}
 
 void
 MenuModel::fakeReset ()

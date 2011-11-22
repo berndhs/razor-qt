@@ -20,7 +20,7 @@
  *
  */
 
-
+#include <iostream>
 #include "geuzen-main-menu.h"
 #include "geuzen-menu-config.h"
 #include <QDebug>
@@ -85,6 +85,7 @@ GeuzenMainMenu::~GeuzenMainMenu()
  ************************************************/
 void GeuzenMainMenu::showMenu()
 {
+  std::cerr << __PRETTY_FUNCTION__ << std::endl;
   if (mXdgMenu.isOutDated())
     buildMenu();
 
@@ -145,6 +146,7 @@ void GeuzenMainMenu::settigsChanged()
  ************************************************/
 void GeuzenMainMenu::buildMenu()
 {
+  std::cerr << __PRETTY_FUNCTION__ << std::endl;
   mXdgMenu.setEnvironments("X-RAZOR");
   mXdgMenu.setLogDir(mLogDir);
 
@@ -162,7 +164,13 @@ void GeuzenMainMenu::buildMenu()
     QMessageBox::warning(this, "Parse error", mXdgMenu.errorString());
     return;
   }
-
+  std::cerr << " done with buildMenu main part " << mMenu << std::endl;
+  if (mMenu) {
+    mMenu->appendSubmenuActions (
+             tr("Leave"), 
+             XdgIcon::fromTheme ("system-log-out"),
+             mPowerManager->availableActions());
+  }
 #if 0
   QMenu* leaveMenu = mMenu->addMenu(XdgIcon::fromTheme("system-shutdown"), tr("Leave"));
   leaveMenu->addActions(mPowerManager->availableActions());

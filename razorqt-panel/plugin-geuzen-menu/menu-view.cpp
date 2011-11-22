@@ -3,6 +3,7 @@
 #include <QMessageBox>
 #include <iostream>
 #include <QtDeclarative/QDeclarativeEngine>
+#include <qtxdg/xdgicon.h>
 
 namespace geuzen
 {
@@ -13,24 +14,31 @@ MenuView::MenuView (const XdgMenu & xdgMenu,
    topModel (0),
    nextSubTag (0),
    nextAppTag (0),
+   nextActionTag (0),
    menuImage ("menuimage"),
-   menuImageUrl (QString("image://menuicons/") + menuImage)
+   menuImageUrl (QString("image://menuicons/") + menuImage),
+   topIcon ("topicion"),
+   topIconUrl (QString("image://menuicons/") + topIcon),
+   backIcon ("backicon"),
+   backIconUrl (QString("image://menuicons/") + backIcon)
 {
   setStyleSheet ("background:transparent;");
 
   topModel = new MenuModel (this);
+  topModel->setTitle (title);
   topModelTag = nextSubTag;
-  topModel->addNavigate (QString ("0-0-0"),-1);
+  topModel->addItem (QString ("0-0-0"), Entry_Navigate,-1, QString());
   modelTagStack.prepend (topModelTag);
   subMenus[topModelTag] = topModel;
   nextSubTag++;
-  readModel (topModel, xdgMenu);
-  topModel->setTitle (tr("Applications"));
   setWindowFlags (Qt::Window | Qt::FramelessWindowHint);
   //setAttribute (Qt::WA_NoSystemBackground);
   //setAttribute (Qt::WA_TranslucentBackground);
   engine()->addImageProvider (QLatin1String("menuicons"),&imagePro);
   imagePro.addIcon (menuImage,QIcon (":/img/lines.png"));
+  imagePro.addIcon (topIcon,XdgIcon::fromTheme ("go-home"));
+  imagePro.addIcon (backIcon, XdgIcon::fromTheme ("go-previous"));
+  readModel (topModel, xdgMenu);
 }
 
 void
@@ -47,6 +55,9 @@ MenuView::selected (int kind, int tag)
     break;
   case Entry_Navigate:
     navigate (tag);
+    break;
+  case Entry_Action:
+    triggerAction (tag);
     break;
   default:
     std::cerr << "      bad kind " << kind;
@@ -93,6 +104,19 @@ MenuView::navigate (int naviTag)
     switchMenu (naviTag);
   }
 }
+
+void
+MenuView::triggerAction (int actionTag)
+{
+  if (actions.contains (actionTag)) {
+    QAction * act = actions[actionTag];
+    if (act) {
+      act->trigger();
+      hide ();
+    }
+  }
+}
+
 void
 MenuView::reload (const XdgMenu & xdgMenu)
 {
@@ -179,7 +203,6 @@ MenuView::parseDom (MenuModel * parseModel, const QDomElement & root)
   for (elt = root.firstChildElement ();
        !elt.isNull();
        elt = elt.nextSiblingElement ()) {
-    std::cerr << " tag " << elt.tagName().toStdString() << std::endl;
     if (elt.tagName() == "Menu") {
       startSubMenu (parseModel, elt);
     } else if (elt.tagName() == "AppLink") {
@@ -205,9 +228,11 @@ MenuView::startSubMenu (MenuModel * parseModel, const QDomElement & root)
   nextSubTag++;
   int previousTag = modelTagStack.first();
   subMenus[subTag] = subModel;
-  parseModel->addSubmenu (title, desktopFile, subTag, menuImageUrl);
-  subModel->addNavigate (QString ("<<"),topModelTag);
-  subModel->addNavigate (QString ("<"),previousTag);
+  parseModel->addItem (title, Entry_Menu, subTag, menuImageUrl);
+  subModel->addItem (QString ("<<"),Entry_Navigate, topModelTag, 
+                          topIconUrl);
+  subModel->addItem (QString ("<"),Entry_Navigate,previousTag,
+                           backIconUrl);
   modelTagStack.prepend (subTag);
   parseDom (subModel, root);
   modelTagStack.removeFirst ();
@@ -228,9 +253,38 @@ MenuView::insertAppLink (MenuModel * parseModel, const QDomElement & elt)
   QString imageName (QString("appimg%1").arg(nextAppTag));
   QString imageUrl (QString ("image://menuicons/%1").arg(imageName));
   imagePro.addIcon (imageName, desk.icon());
-  parseModel->addAppLink (desk.name(), desktopPath, 
+  parseModel->addItem (desk.name(), Entry_Application, 
                           nextAppTag, imageUrl);
   nextAppTag++;
+}
+
+void
+MenuView::appendSubmenuActions (const QString & title,
+                             const QIcon & icon,
+                             QList<QAction *>  actions)
+{
+  std::cerr << __PRETTY_FUNCTION__ << title.toStdString() << std::endl;
+  MenuModel * subModel = new MenuModel (this);
+  subModel->setTitle (title);
+  int subTag = nextSubTag;
+  nextSubTag++;
+  subMenus[subTag] = subModel;
+  QString imageName (QString("menuimg%1").arg(subTag));
+  QString imageUrl (QString ("image://menuicons/%1").arg(imageName));
+  imagePro.addIcon (imageName, icon);
+  topModel->addItem (title, Entry_Menu, subTag, imageUrl);
+  subModel->addItem (QString ("<<"),Entry_Navigate, topModelTag, 
+                          topIconUrl);
+  for (int a=0; a<actions.count(); a++) {
+    int tag = nextActionTag;
+    nextActionTag ++;
+    QAction *act = actions.at(a);
+    actions[tag] = act;
+    imageName = QString ("actionimg%1").arg(tag);
+    imageUrl = QString ("image://actionicons/%1").arg(imageName);
+    imagePro.addIcon (imageName, icon);
+    subModel->addItem (act->text(), Entry_Action, tag, imageUrl);
+  }
 }
 
 

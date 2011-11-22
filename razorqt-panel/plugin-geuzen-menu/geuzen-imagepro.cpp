@@ -43,7 +43,6 @@ ImagePro::requestPixmap(const QString &id,
 void
 ImagePro::addIcon (const QString & id, const QIcon & icon)
 {
-  std::cerr << __PRETTY_FUNCTION__ << " " << id.toStdString() << std::endl;
   icons[id] = icon;
 }
 
