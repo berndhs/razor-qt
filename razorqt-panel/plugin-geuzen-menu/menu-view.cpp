@@ -12,9 +12,9 @@ MenuView::MenuView (const XdgMenu & xdgMenu,
                     QWidget *parent)
   :QDeclarativeView (parent),
    topModel (0),
-   nextSubTag (0),
-   nextAppTag (0),
-   nextActionTag (0),
+   nextSubTag (10001),
+   nextAppTag (20001),
+   nextActionTag (40001),
    menuImage ("menuimage"),
    menuImageUrl (QString("image://menuicons/") + menuImage),
    topIcon ("topicion"),
@@ -90,7 +90,7 @@ MenuView::startApplication (int appTag)
                << apps[appTag].fileName().toStdString() << std::endl;
      apps[appTag].startDetached ();
   }
-  navigate (-1);
+  navigate ();
 }
 
 void
@@ -108,11 +108,17 @@ MenuView::navigate (int naviTag)
 void
 MenuView::triggerAction (int actionTag)
 {
+  std::cerr << __PRETTY_FUNCTION__ << " tag " << actionTag 
+            << std::endl;
   if (actions.contains (actionTag)) {
     QAction * act = actions[actionTag];
+    std::cerr << __PRETTY_FUNCTION__ << " found action " << act 
+              << std::endl;
     if (act) {
+      std::cerr << __PRETTY_FUNCTION__ << " action " << act->text().toStdString()
+                << std::endl;
       act->trigger();
-      hide ();
+      navigate ();
     }
   }
 }
@@ -261,7 +267,7 @@ MenuView::insertAppLink (MenuModel * parseModel, const QDomElement & elt)
 void
 MenuView::appendSubmenuActions (const QString & title,
                              const QIcon & icon,
-                             QList<QAction *>  actions)
+                             QList<QAction *>  acts)
 {
   std::cerr << __PRETTY_FUNCTION__ << title.toStdString() << std::endl;
   MenuModel * subModel = new MenuModel (this);
@@ -275,15 +281,25 @@ MenuView::appendSubmenuActions (const QString & title,
   topModel->addItem (title, Entry_Menu, subTag, imageUrl);
   subModel->addItem (QString ("<<"),Entry_Navigate, topModelTag, 
                           topIconUrl);
-  for (int a=0; a<actions.count(); a++) {
+  for (int a=0; a<acts.count(); a++) {
     int tag = nextActionTag;
     nextActionTag ++;
-    QAction *act = actions.at(a);
+    QAction *act = acts.at(a);
     actions[tag] = act;
     imageName = QString ("actionimg%1").arg(tag);
     imageUrl = QString ("image://actionicons/%1").arg(imageName);
     imagePro.addIcon (imageName, icon);
     subModel->addItem (act->text(), Entry_Action, tag, imageUrl);
+    std::cerr << __PRETTY_FUNCTION__ << " act " << act
+              << " title " << act->text().toStdString()
+              << " imgUrl " << imageUrl.toStdString()
+              << " tag " << tag
+              << std::endl;
+  }
+  for (auto ait=actions.begin(); ait!=actions.end(); ait++) {
+    std::cerr << "   tag " << ait.key()
+              << "   act " << ait.value()
+              << std::endl;
   }
 }
 

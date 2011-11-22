@@ -61,7 +61,7 @@ private:
 
   void switchMenu (int menuTag);
   void startApplication (int appTag);
-  void navigate (int naviTag);
+  void navigate (int naviTag = -1);
   void triggerAction (int actionTag);
 
 

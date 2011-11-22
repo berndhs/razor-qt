@@ -10,6 +10,8 @@ MOC_DIR = temp/moc
 
 LIBS += -lrazorqt -lrazorqxt -lqtxdg
 
+QMAKE_CXXFLAGS += -std=c++0x
+
 FORMS = \
     geuzen-menu-config.ui
 
