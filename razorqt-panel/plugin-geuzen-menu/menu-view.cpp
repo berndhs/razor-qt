@@ -296,11 +296,6 @@ MenuView::appendSubmenuActions (const QString & title,
               << " tag " << tag
               << std::endl;
   }
-  for (auto ait=actions.begin(); ait!=actions.end(); ait++) {
-    std::cerr << "   tag " << ait.key()
-              << "   act " << ait.value()
-              << std::endl;
-  }
 }
 
 

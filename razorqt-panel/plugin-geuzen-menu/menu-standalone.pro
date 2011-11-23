@@ -1,5 +1,5 @@
 TEMPLATE = app
-TARGET = appmenu
+TARGET = gappmenu
 
 QT += gui xml declarative
 
@@ -32,3 +32,7 @@ HEADERS = \
     menu-model.h \
     menu-view.h \
     menustyle.h
+
+target.path = $$(HOME)/bin
+
+INSTALLS += target
