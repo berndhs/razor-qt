@@ -54,6 +54,9 @@ Rectangle {
         Image {
           width: mainBox.iconWidth
           height: mainBox.iconHeight
+          anchors {
+            verticalCenter: parent.verticalCenter
+          }
           source: iconName
         }
         Rectangle {

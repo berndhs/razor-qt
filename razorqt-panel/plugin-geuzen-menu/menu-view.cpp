@@ -36,8 +36,9 @@ MenuView::MenuView (const XdgMenu & xdgMenu,
   //setAttribute (Qt::WA_TranslucentBackground);
   engine()->addImageProvider (QLatin1String("menuicons"),&imagePro);
   imagePro.addIcon (menuImage,QIcon (":/img/lines.png"));
-  imagePro.addIcon (topIcon,XdgIcon::fromTheme ("go-home"));
-  imagePro.addIcon (backIcon, XdgIcon::fromTheme ("go-previous"));
+  imagePro.addIcon (topIcon,XdgIcon::fromTheme ("start-here"));
+  imagePro.addIcon (backIcon, XdgIcon::fromTheme ("go-previous",
+                            QIcon (":/img/less.png")));
   readModel (topModel, xdgMenu);
 }
 
@@ -221,12 +222,17 @@ void
 MenuView::startSubMenu (MenuModel * parseModel, const QDomElement & root)
 {
   QString title;
+  std::cerr << __PRETTY_FUNCTION__  << std::endl
+            << "     title [" << root.attribute("title").toStdString()
+            << "]" << std::endl
+            << "      name [" << root.attribute("name").toStdString()
+            << "]" << std::endl
+           ;
   if (root.attribute("title").isEmpty()) {
     title = root.attribute ("name");
   } else {
     title = root.attribute ("title");
   }
-  std::cerr << "  submenu title " << title.toStdString() << std::endl;
   QString desktopFile = root.attribute ("desktopFile");
   MenuModel * subModel = new MenuModel (this);
   subModel->setTitle (title);
@@ -234,10 +240,11 @@ MenuView::startSubMenu (MenuModel * parseModel, const QDomElement & root)
   nextSubTag++;
   int previousTag = modelTagStack.first();
   subMenus[subTag] = subModel;
-  parseModel->addItem (title, Entry_Menu, subTag, menuImageUrl);
-  subModel->addItem (QString ("<<"),Entry_Navigate, topModelTag, 
+  parseModel->addItem (title, Entry_Menu, subTag, 
+                        submenuIconUrl(title, subTag, menuImageUrl));
+  subModel->addItem (tr ("Top"),Entry_Navigate, topModelTag, 
                           topIconUrl);
-  subModel->addItem (QString ("<"),Entry_Navigate,previousTag,
+  subModel->addItem (tr ("Back"),Entry_Navigate,previousTag,
                            backIconUrl);
   modelTagStack.prepend (subTag);
   parseDom (subModel, root);
@@ -287,7 +294,7 @@ MenuView::appendSubmenuActions (const QString & title,
     QAction *act = acts.at(a);
     actions[tag] = act;
     imageName = QString ("actionimg%1").arg(tag);
-    imageUrl = QString ("image://actionicons/%1").arg(imageName);
+    imageUrl = QString ("image://menuicons/%1").arg(imageName);
     imagePro.addIcon (imageName, icon);
     subModel->addItem (act->text(), Entry_Action, tag, imageUrl);
     std::cerr << __PRETTY_FUNCTION__ << " act " << act
@@ -298,5 +305,25 @@ MenuView::appendSubmenuActions (const QString & title,
   }
 }
 
+QString
+MenuView::submenuIconUrl (const QString & title,
+                                int       tag,
+                          const QString & defaultUrl)
+{
+  QString flatName (title.toLower());
+  QStringList prefixes;
+  prefixes << "applications" << "preferences" << "system";
+  for (int p=0; p<prefixes.count(); p++) {
+    QString tryName (prefixes.at(p) + "-" + flatName);
+    QIcon tryIcon (XdgIcon::fromTheme (tryName));
+    if (!tryIcon.isNull ()) {
+      QString imageName (QString("submenuimg%1").arg(tag));
+      QString imageUrl (QString ("image://menuicons/%1").arg(imageName));
+      imagePro.addIcon (imageName, tryIcon);
+      return imageUrl;
+    }
+  }
+  return defaultUrl;
+}
 
 } // namespace

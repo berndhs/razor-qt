@@ -8,5 +8,6 @@
 </qresource>
 <qresource prefix="/img">
   <file alias="lines.png">images/lines.png</file>
+  <file alias="less.png">images/less.png</file>
 </qresource>
 </RCC>

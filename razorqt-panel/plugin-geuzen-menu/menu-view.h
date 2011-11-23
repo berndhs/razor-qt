@@ -54,10 +54,17 @@ private:
   typedef QMap <int, XdgDesktopFile>     AppMap;
   typedef QMap <int, QAction*>           ActionMap;
 
+  /** functions to load/parse the model */
+
   void readModel (MenuModel * parseMode, const XdgMenu & xdgMenu);
   void parseDom (MenuModel * parseMode, const QDomElement & root);
   void startSubMenu (MenuModel * parseMode, const QDomElement & root);
   void insertAppLink (MenuModel * parseMode, const QDomElement & elt);
+  QString submenuIconUrl (const QString & title,
+                            int tag,
+                        const QString & defaultUrl);
+
+  /** functions to navigate through the menu */
 
   void switchMenu (int menuTag);
   void startApplication (int appTag);
