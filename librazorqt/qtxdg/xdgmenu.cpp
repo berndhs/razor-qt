@@ -57,7 +57,7 @@ void installTranslation(const QString &name)
         return;
 
     QString locale = QLocale::system().name();
-    QTranslator *translator = new QTranslator();
+    QTranslator *translator = new QTranslator(qApp);
     translator->load(QString("%1/%2_%3.qm").arg(TRANSLATIONS_DIR, name, locale));
 
     QCoreApplication::installTranslator(translator);

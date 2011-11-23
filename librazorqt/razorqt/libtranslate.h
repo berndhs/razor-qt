@@ -34,12 +34,11 @@
 inline void libTranslate(const QString &name)
 {
     static bool alreadyLoaded = false;
-
     if (alreadyLoaded)
         return;
 
     QString locale = QLocale::system().name();
-    QTranslator *translator = new QTranslator();
+    QTranslator *translator = new QTranslator(qApp);
     translator->load(QString("%1/%2_%3.qm").arg(TRANSLATIONS_DIR, name, locale));
 
     QCoreApplication::installTranslator(translator);

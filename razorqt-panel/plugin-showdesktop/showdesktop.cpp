@@ -78,6 +78,7 @@ void ShowDesktop::showDesktop()
     if ( error == Success && NULL != data) 
     {
         bDesktopShown = static_cast<bool>(data[0]);
+        XFree(data);
     }
     
     xfitMan().clientMessage(QX11Info::appRootWindow(),xfitMan().atom("_NET_SHOWING_DESKTOP"),(unsigned long) !bDesktopShown, 0,0,0,0);
