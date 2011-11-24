@@ -8,6 +8,7 @@
 #include <QtDeclarative/QDeclarativeContext>
 #include <QList>
 #include <QAction>
+#include <QEvent>
 
 
 #include <qtxdg/xdgmenu.h>
@@ -43,6 +44,10 @@ public slots:
 
   void exec (const QPoint & pos);
   void cancel ();
+
+protected:
+
+  void leaveEvent (QEvent * evt);
 
 private slots:
 

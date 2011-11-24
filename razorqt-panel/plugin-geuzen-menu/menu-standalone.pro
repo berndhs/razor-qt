@@ -33,6 +33,6 @@ HEADERS = \
     menu-view.h \
     menustyle.h
 
-target.path = $$(HOME)/bin
+target.path = /usr/local/bin
 
 INSTALLS += target

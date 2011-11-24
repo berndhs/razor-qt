@@ -192,7 +192,7 @@ MenuView::init (ViewType viewType)
 void
 MenuView::cancel ()
 {
-  hide ();
+  navigate ();
 }
 
 void
@@ -325,5 +325,14 @@ MenuView::submenuIconUrl (const QString & title,
   }
   return defaultUrl;
 }
+
+void
+MenuView::leaveEvent (QEvent * evt)
+{
+  if (evt && evt->type() == QEvent::Leave) {
+    cancel ();
+  }
+}
+
 
 } // namespace

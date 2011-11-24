@@ -9,8 +9,8 @@ Rectangle {
   property real gridCellHeight: 50
   property real itemWidth: 196
   property real itemHeight: 48
-  property real iconWidth: 32
-  property real iconHeight: 32
+  property real iconWidth: 24
+  property real iconHeight: 24
   property real labelWidth: itemWidth - iconWidth - 2
   property alias menuTitle: titleText.text
 
@@ -54,6 +54,7 @@ Rectangle {
         Image {
           width: mainBox.iconWidth
           height: mainBox.iconHeight
+          fillMode: Image.PreserveAspectFit
           anchors {
             verticalCenter: parent.verticalCenter
           }
