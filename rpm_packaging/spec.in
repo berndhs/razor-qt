@@ -1,7 +1,7 @@
 # norootforbuild
 
 %if X%{_vendor} == Xmeego
-	%define breq pkgconfig(QtGui), pkgconfig(QtDeclarative), libXcomposite-devel, pkgconfig(QtWebKit), pkgconfig(QtXml), pkgconfig(zlib)
+	%define breq pkgconfig(QtGui), pkgconfig(QtDeclarative), pkgconfig(QtWebKit), pkgconfig(QtXml), libXcomposite-devel, pkgconfig(zlib)
 	%define qmake /usr/bin/qmake
 	%define lrelease /usr/bin/lrelease
 	%define uic /usr/bin/uic
@@ -10,7 +10,7 @@
 %endif
 
 %if 0%{?fedora} || 0%{?centos_version}
-	%define breq qt4-devel >= 4.6.0, libXcomposite-devel, pkgconfig(zlib)
+	%define breq qt4-devel >= 4.7.1, pkgconfig(QtGui), pkgconfig(QtDeclarative), pkgconfig(QtWebKit), pkgconfig(QtXml), libXcomposite-devel, pkgconfig(zlib)
 	%define qmake /usr/bin/qmake-qt4
 	%define lrelease /usr/bin/lrelease-qt4
 	%define uic /usr/bin/uic-qt4
@@ -18,7 +18,7 @@
 	%define qtxdglibdevel libqtxdg-devel
 %endif
 %if 0%{?mdkversion}
-	%define breq libqt4-devel >= 4.6.0, qt4-linguist, libxcomposite-devel
+	%define breq libqt4-devel >= 4.7.1, qt4-linguist, libxcomposite-devel
 	%define qmake /usr/lib/qt4/bin/qmake
 	%define lrelease /usr/lib/qt4/bin/lrelease
 	%define uic /usr/lib/qt4/bin/uic
@@ -26,7 +26,7 @@
 	%define qtxdglibdevel libqtxdg-devel
 %endif
 %if 0%{?suse_version}
-	%define breq libqt4-devel >= 4.6.0, update-desktop-files
+	%define breq libqt4-devel >= 4.7.1, update-desktop-files
 	%define qmake /usr/bin/qmake
 	%define lrelease /usr/bin/lrelease
 	%define uic /usr/bin/uic
@@ -45,6 +45,12 @@ Summary:	Razor a lightweight desktop toolbox
 Vendor:		Razor-qt team
 Url:		http://razor-qt.org
 BuildRequires:	gcc-c++, cmake, make, file-devel, %{breq}
+%if X%{_vendor} == Xmeego
+BuildRequires:  libudev-devel >= 128
+BuildRequires:  libXdamage-devel
+BuildRequires:  libXrender-devel
+BuildRequires:  libXcursor-devel
+%endif
 BuildRoot:	%{_tmppath}/%{name}-%{version}-build
 Requires:	%{name}-desktop = %{version}, %{name}-panel = %{version}, %{name}-session = %{version}
 Requires:	%{name}-appswitcher = %{version}, %{name}-runner = %{version}
