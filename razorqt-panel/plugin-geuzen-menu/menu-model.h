@@ -23,6 +23,7 @@ public:
 
 
   MenuModel (QObject * parent=0);
+  ~MenuModel ();
 
   int rowCount (const QModelIndex & parent = QModelIndex()) const;
   QVariant data (const QModelIndex & index, int role = Qt::DisplayRole) const;
@@ -35,7 +36,8 @@ public:
   QString title () const;
   void    setTitle (const QString & title);
 
-  void fakeReset ();
+  void clearModel ();
+  void forceReset ();
 
 private:
 

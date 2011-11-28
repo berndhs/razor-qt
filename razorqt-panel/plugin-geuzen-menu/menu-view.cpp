@@ -26,11 +26,7 @@ MenuView::MenuView (const XdgMenu & xdgMenu,
 
   topModel = new MenuModel (this);
   topModel->setTitle (title);
-  topModelTag = nextSubTag;
-  topModel->addItem (QString ("0-0-0"), Entry_Navigate,-1, QString());
-  modelTagStack.prepend (topModelTag);
-  subMenus[topModelTag] = topModel;
-  nextSubTag++;
+  topModel->setObjectName ("topmodel");
   setWindowFlags (Qt::Window | Qt::FramelessWindowHint);
   //setAttribute (Qt::WA_NoSystemBackground);
   //setAttribute (Qt::WA_TranslucentBackground);
@@ -39,7 +35,21 @@ MenuView::MenuView (const XdgMenu & xdgMenu,
   imagePro.addIcon (topIcon,XdgIcon::fromTheme ("start-here"));
   imagePro.addIcon (backIcon, XdgIcon::fromTheme ("go-previous",
                             QIcon (":/img/less.png")));
-  readModel (topModel, xdgMenu);
+  reload (xdgMenu);
+}
+
+void
+MenuView::clearModels ()
+{
+  qDebug () << __PRETTY_FUNCTION__;
+  ModelMap::iterator mit;
+  for (mit = subMenus.begin(); mit != subMenus.end(); mit++) {
+    mit.value()->clearModel ();
+  }
+  subMenus.clear ();
+  actions.clear ();
+  apps.clear ();
+  topModel->clearModel ();
 }
 
 void
@@ -71,15 +81,29 @@ MenuView::switchMenu (int menuTag)
 {
   std::cerr << __PRETTY_FUNCTION__ << " tag " << menuTag << std::endl;
   if (subMenus.contains (menuTag)) {
+    std::cerr << __PRETTY_FUNCTION__ << " have tag" << std::endl;
     MenuModel * subModel = subMenus[menuTag];
+    std::cerr << __PRETTY_FUNCTION__ << " submodel " 
+               << subModel <<  std::endl;
     if (subModel) {
+      std::cerr << __PRETTY_FUNCTION__ << " line " << __LINE__ << std::endl;
+      context = rootContext();
+      std::cerr << __PRETTY_FUNCTION__ << " line " << __LINE__ 
+                << " context " << context << std::endl;
       context->setContextProperty ("cppMenuModel",subModel);
-      subModel->fakeReset ();
+      std::cerr << __PRETTY_FUNCTION__ << " line " << __LINE__ << std::endl;
+      subModel->forceReset ();
+      std::cerr << __PRETTY_FUNCTION__ << " line " << __LINE__ << std::endl;
       if (qmlRoot) {
+      std::cerr << __PRETTY_FUNCTION__ << " line " << __LINE__ << std::endl;
         qmlRoot->setProperty ("menuTitle",subModel->title());
       }
+      std::cerr << __PRETTY_FUNCTION__ << " line " << __LINE__ << std::endl;
     }
+  } else {
+    std::cerr << __PRETTY_FUNCTION__ << " NO tag" << std::endl;
   }
+      std::cerr << __PRETTY_FUNCTION__ << " done line " << __LINE__ << std::endl;
 }
 
 void
@@ -128,15 +152,23 @@ void
 MenuView::reload (const XdgMenu & xdgMenu)
 {
   qDebug () << __PRETTY_FUNCTION__;
-  subMenus.clear ();
-  apps.clear ();
-  if (topModel) {
-    topModel->deleteLater ();
+  if (!topModel) {
+    topModel = new MenuModel (this);
+    topModel->setObjectName ("topmodel_reloaded");
   }
-  topModel = new MenuModel (this);
-  subMenus[nextSubTag] = topModel;
-  nextSubTag++;
+  clearModels ();
+  //topModelTag = nextSubTag;
+  modelTagStack.clear ();
+  modelTagStack.prepend (topModelTag);
+  subMenus[topModelTag] = topModel;
+  nextSubTag += 100000;
+  nextAppTag += 100000;
+  nextActionTag += 100000;
+  topModel->addItem (QString ("0-0-0"), Entry_Navigate,-1, QString());
+  qDebug () << __PRETTY_FUNCTION__ << " call readModel ";
   readModel (topModel, xdgMenu);
+  qDebug () << __PRETTY_FUNCTION__ << " done readModel ";
+  topModel->forceReset ();
 }
 
 void
@@ -145,6 +177,7 @@ MenuView::readModel (MenuModel * parseModel, const XdgMenu & xdgMenu)
   const QDomDocument doc (xdgMenu.xml());
   QDomElement root = doc.firstChildElement ("");
   parseDom (parseModel, root);
+  qDebug () << __PRETTY_FUNCTION__ << " done " << parseModel;
 }
 
 void
@@ -237,6 +270,7 @@ MenuView::startSubMenu (MenuModel * parseModel, const QDomElement & root)
   MenuModel * subModel = new MenuModel (this);
   subModel->setTitle (title);
   int subTag = nextSubTag;
+  subModel->setObjectName (QString ("submodel_%1").arg(subTag));
   nextSubTag++;
   int previousTag = modelTagStack.first();
   subMenus[subTag] = subModel;
@@ -281,6 +315,7 @@ MenuView::appendSubmenuActions (const QString & title,
   subModel->setTitle (title);
   int subTag = nextSubTag;
   nextSubTag++;
+  subModel->setObjectName (QString ("submodel_%1").arg(subTag));
   subMenus[subTag] = subModel;
   QString imageName (QString("menuimg%1").arg(subTag));
   QString imageUrl (QString ("image://menuicons/%1").arg(imageName));

@@ -37,14 +37,17 @@ StandaloneMenu::run ()
 void
 StandaloneMenu::showMenu ()
 {
+  qDebug () << __PRETTY_FUNCTION__ << " outdated ? " 
+            << xdgMenu.isOutDated();
+  QPoint pos (QCursor::pos());
   if (xdgMenu.isOutDated()) {
     buildMenu();
   }
   if (!menuView) {
     return;
   }
-  menuView->resize (800,400);
-  menuView->exec (QCursor::pos());
+  menuView->resize (600,400);
+  menuView->exec (pos);
 }
 
 void

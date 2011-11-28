@@ -9,6 +9,7 @@
 #include <QList>
 #include <QAction>
 #include <QEvent>
+#include <QPointer>
 
 
 #include <qtxdg/xdgmenu.h>
@@ -44,6 +45,7 @@ public slots:
 
   void exec (const QPoint & pos);
   void cancel ();
+  void clearModels ();
 
 protected:
 
@@ -55,9 +57,9 @@ private slots:
 
 private:
 
-  typedef QMap <int, MenuModel*>         ModelMap;
+  typedef QMap <int, QPointer<MenuModel> >         ModelMap;
   typedef QMap <int, XdgDesktopFile>     AppMap;
-  typedef QMap <int, QAction*>           ActionMap;
+  typedef QMap <int, QPointer<QAction> >           ActionMap;
 
   /** functions to load/parse the model */
 

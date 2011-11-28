@@ -20,6 +20,10 @@ MenuModel::MenuModel (QObject *parent)
   setRoleNames (daroles);
 }
 
+MenuModel::~MenuModel ()
+{
+}
+
 QString
 MenuModel::title() const
 {
@@ -36,6 +40,7 @@ int
 MenuModel::rowCount (const QModelIndex & parent) const
 {
   Q_UNUSED (parent);
+  //qDebug () << __PRETTY_FUNCTION__ << this << items.count();
   return items.count ();
 }
 
@@ -81,9 +86,17 @@ MenuModel::addItem (const QString & title,
   endInsertRows ();
 }
 
+void
+MenuModel::clearModel ()
+{
+  qDebug () << __PRETTY_FUNCTION__ << this;
+  beginResetModel ();
+  items.clear ();
+  endResetModel ();
+}
 
 void
-MenuModel::fakeReset ()
+MenuModel::forceReset ()
 {
   beginResetModel ();
   endResetModel ();

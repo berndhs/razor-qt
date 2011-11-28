@@ -75,6 +75,9 @@ Rectangle {
       MouseArea {
         anchors.fill: parent
         onClicked: {
+          console.log (" \nQML selected " + index + " kind " 
+                        + itemKind + " tag " 
+                        + itemTag + " title " + itemTitle)
           mainBox.selected (itemKind, itemTag)
         }
       }
