@@ -295,7 +295,8 @@ MenuView::insertAppLink (MenuModel * parseModel, const QDomElement & elt)
     title = elt.attribute ("title");
   }
   QString desktopPath = elt.attribute ("desktopFile");
-  apps[nextAppTag] = XdgDesktopFile (desktopPath, this);
+  apps[nextAppTag] = XdgDesktopFile();
+  apps[nextAppTag].load  (desktopPath);
   XdgDesktopFile & desk (apps[nextAppTag]);
   QString imageName (QString("appimg%1").arg(nextAppTag));
   QString imageUrl (QString ("image://menuicons/%1").arg(imageName));
