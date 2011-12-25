@@ -1,5 +1,6 @@
 include(RazorLibSuffix)
 
+find_package(X11 REQUIRED)
 
 # our Qxt library
 set ( razorqxt_HDRS
@@ -27,3 +28,6 @@ set_target_properties(razorqxt PROPERTIES
 
 install(TARGETS razorqxt DESTINATION lib${LIB_SUFFIX})
 install(FILES ${razorqxt_HDRS} DESTINATION include/razorqxt)
+
+include(create_pkgconfig_file)
+create_pkgconfig_file(razorqxt "Customized Qxt library for Razor-qt project")

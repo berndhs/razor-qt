@@ -1,4 +1,5 @@
 /* BEGIN_COMMON_COPYRIGHT_HEADER
+ * (c)LGPL3+
  *
  * Razor - a lightweight, Qt based, desktop toolset
  * http://razor-qt.org
@@ -41,6 +42,7 @@ QMap<QString,QString> availableWindowManagers()
     candidates["windowmaker"] = QObject::tr("Windowmaker - a classical lightweight window manager");
     candidates["e16"] =         QObject::tr("Enlightenement 16");
     candidates["fvwm2"] =       QObject::tr("Fvwm2 - a classical lightweight window manager");
+    candidates["xfwm4"] =       QObject::tr("Xfwm4 - a window manager for the Xfce desktop environment");
     
     foreach (QString s, candidates.keys())
     {

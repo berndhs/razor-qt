@@ -6,3 +6,9 @@ Comment=Display rich text on the screen
 
 Name[pl]=Witaj Świecie
 Comment[pl]=Wyświetla formatowany tekst na ekranie
+
+Name[es]=Hola Mundo
+Comment[es]=Muestra texto con formato en la pantalla
+
+Name[hu]=Hello világ!
+Comment[hu]=Üdvözlő szöveg megjelenítése a képernyőn

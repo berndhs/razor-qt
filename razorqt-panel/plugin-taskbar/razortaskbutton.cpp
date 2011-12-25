@@ -1,4 +1,5 @@
 /* BEGIN_COMMON_COPYRIGHT_HEADER
+ * (c)LGPL3+
  *
  * Razor - a lightweight, Qt based, desktop toolset
  * http://razor-qt.org
@@ -109,6 +110,15 @@ void RazorTaskButton::updateIcon()
         setIcon(QIcon(pix));
     else
         setIcon(XdgIcon::defaultApplicationIcon());
+}
+
+
+/************************************************
+
+ ************************************************/
+void RazorTaskButton::setShowOnlyCurrentDesktopTasks(bool value)
+{
+    mShowOnlyCurrentDesktopTasks = value;
 }
 
 
@@ -358,7 +368,7 @@ void RazorTaskButton::contextMenuEvent(QContextMenuEvent* event)
 //    qDebug() << "    * BelowLayer    " << state.BelowLayer;
 //    qDebug() << "    * Attention     " << state.Attention;
 
-    QMenu menu(tr("Appliction"));
+    QMenu menu(tr("Application"));
     QAction* a;
 
     /* KDE menu *******
@@ -527,6 +537,16 @@ void  RazorTaskButton::handlePropertyNotify(XPropertyEvent* event)
         return;
     }
 
+    if (event->atom == XfitMan::atom("_NET_WM_DESKTOP"))
+    {
+        if (mShowOnlyCurrentDesktopTasks)
+        {
+            int desktop = desktopNum();
+            setHidden(desktop != -1 && desktop != xfitMan().getActiveDesktop());
+        }
+        return;
+    }
+
 
 //    char* aname = XGetAtomName(QX11Info::display(), event->atom);
 //    qDebug() << "** XPropertyEvent ********************";
@@ -547,3 +567,4 @@ int RazorTaskButton::desktopNum() const
 
 RazorTaskButton* RazorTaskButton::mCheckedBtn = 0;
 
+bool RazorTaskButton::mShowOnlyCurrentDesktopTasks = false;

@@ -1,4 +1,5 @@
 /* BEGIN_COMMON_COPYRIGHT_HEADER
+ * (c)LGPL3+
  *
  * Razor - a lightweight, Qt based, desktop toolset
  * http://razor-qt.org
@@ -125,7 +126,7 @@ void DesktopSwitch::setDesktop(int desktop)
 void DesktopSwitch::wheelEvent(QWheelEvent* e)
 {
     int max = xfitMan().getNumDesktop() - 1;
-    int delta = e->delta() > 0 ? 1 : -1;
+    int delta = e->delta() < 0 ? 1 : -1;
     int current = xfitMan().getActiveDesktop() + delta;
     
     if (current > max)

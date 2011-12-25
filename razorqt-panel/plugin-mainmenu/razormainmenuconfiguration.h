@@ -1,4 +1,5 @@
 /* BEGIN_COMMON_COPYRIGHT_HEADER
+ * (c)LGPL3+
  *
  * Razor - a lightweight, Qt based, desktop toolset
  * http://razor-qt.org
@@ -58,9 +59,10 @@ private slots:
     */
     void loadSettings();
     void dialogButtonsAction(QAbstractButton *btn);
-    void textButtonChanged(QString value);
+    void textButtonChanged(const QString &value);
     void showTextChanged(bool value);
     void chooseMenuFile();
+    void shortcutChanged(const QString &value);
 };
 
 #endif // RAZORMAINMENUCONFIGURATION_H

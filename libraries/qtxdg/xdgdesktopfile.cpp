@@ -1,4 +1,5 @@
 /* BEGIN_COMMON_COPYRIGHT_HEADER
+ * (c)LGPL3+
  *
  * Razor - a lightweight, Qt based, desktop toolset
  * http://razor-qt.org
@@ -79,7 +80,8 @@ public:
  ************************************************/
 XdgDesktopFileData::XdgDesktopFileData():
     mIsValid(false),
-    mValidIsChecked(false)
+    mValidIsChecked(false),
+    mIsShow(Undef)
 {
 }
 

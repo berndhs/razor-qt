@@ -3,7 +3,15 @@ Type=Service
 ServiceTypes=RazorPanel/Plugin
 Name=Removable media
 Comment=Removable media handler (USB, CD, DVD, ...)
+
 Name[ru]=Сменные носители
 Comment[ru]=Менеджер сменных носителей (USB, CD, DVD, и.т.д.)
+
 Name[pl]=Menedżer urządzeń
 Comment[pl]=Menedżer urządzeń (USB, CD, DVD, ...)
+
+Name[es]=Dispositivos desmontables
+Name[hu]=Cserélhető eszköz
+Comment[hu]=Cserélhetőeszköz-kezelő (USB, CD, DVD, …)
+Comment[es]=Manejador de dispositivos desmontables (USB, CD, DVD, ...)
+

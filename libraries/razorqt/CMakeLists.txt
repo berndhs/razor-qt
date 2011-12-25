@@ -1,4 +1,6 @@
 
+find_package(X11 REQUIRED)
+
 include_directories (
 	${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}
     ${QT_QTCORE_INCLUDE_DIR} ${QT_QTGUI_INCLUDE_DIR} ${QT_QTDBUS_INCLUDE_DIR}
@@ -98,3 +100,5 @@ install(TARGETS razorqt DESTINATION lib${LIB_SUFFIX})
 install(FILES ${razorqt_HDRS} DESTINATION include/razorqt)
 install(FILES ${RAZORQT_QM_FILES}     DESTINATION ${APP_SHARE_DIR})
 
+include(create_pkgconfig_file)
+create_pkgconfig_file(razorqt "Shared library for Razor-qt applications")

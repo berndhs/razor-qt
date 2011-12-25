@@ -1,4 +1,5 @@
 /* BEGIN_COMMON_COPYRIGHT_HEADER
+ * (c)LGPL3+
  *
  * Razor - a lightweight, Qt based, desktop toolset
  * http://razor-qt.org
@@ -68,6 +69,7 @@ public slots:
     void pluginMoved(QWidget* pluginWidget);
     void screensChangeds();
     void showAddPluginDialog();
+    void showConfigPanelDialog();
     void addPlugin(const RazorPluginInfo &pluginInfo);
     void onRemovePlugin();
     void onMovePlugin();

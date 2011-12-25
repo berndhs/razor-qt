@@ -1,4 +1,5 @@
 /* BEGIN_COMMON_COPYRIGHT_HEADER
+ * (c)LGPL3+
  *
  * Razor - a lightweight, Qt based, desktop toolset
  * http://razor-qt.org
@@ -65,6 +66,7 @@ private:
     QHash<Window, RazorTaskButton*> mButtonsHash;
     QBoxLayout*  mLayout;
     RazorTaskButton* buttonByWindow(Window window) const;
+    bool windowOnActiveDesktop(Window window) const;
     Window mRootWindow;
     Qt::ToolButtonStyle mButtonStyle;
     int buttonMaxWidth;
@@ -73,6 +75,7 @@ private:
     bool mShowOnlyCurrentDesktopTasks;
 
     void handlePropertyNotify(XPropertyEvent* event);
+    void wheelEvent(QWheelEvent* event);
 };
 
 EXPORT_RAZOR_PANEL_PLUGIN_H

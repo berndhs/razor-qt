@@ -1,4 +1,5 @@
 /* BEGIN_COMMON_COPYRIGHT_HEADER
+ * (c)LGPL3+
  *
  * Razor - a lightweight, Qt based, desktop toolset
  * http://razor-qt.org
@@ -68,6 +69,8 @@ public:
     void updateText();
     void updateIcon();
 
+    static void setShowOnlyCurrentDesktopTasks(bool);
+
 public slots:
     void raiseApplication();
     void minimizeApplication();
@@ -93,6 +96,7 @@ private:
     static RazorTaskButton* mCheckedBtn;
     ElidedButtonStyle mStyle;
     const QMimeData *mDraggableMimeData;
+    static bool mShowOnlyCurrentDesktopTasks;
 
 private slots:
     void btnClicked(bool checked);
